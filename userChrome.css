@@ -24,7 +24,7 @@
 
   /* URL Bar width (min applied normally, max on focus) */
   --uc-urlbar-min-width: 35vw;
-  --uc-urlbar-max-width: 35vw;
+  --uc-urlbar-max-width: 50vw;
 
   /* URL Bar position (1 = tabs right, 3 = tabs left) */
   --uc-urlbar-position: 1;
@@ -132,6 +132,7 @@
   #nav-bar {
     order: var(--uc-urlbar-position);
     width: var(--uc-urlbar-min-width);
+    transition: width 0.25s ease;
     &.browser-titlebar {
       width: 100%;
     }
@@ -142,8 +143,13 @@
     width: auto !important;
   }
 
-  #TabsToolbar {
+  #titlebar {
     width: calc(100vw - var(--uc-urlbar-min-width) - 1px);
+    transition: width 0.25s ease;
+  }
+
+  #TabsToolbar {
+    width: 100%;
   }
 
   #tabbrowser-arrowscrollbox {
