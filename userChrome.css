@@ -75,6 +75,9 @@
 #TabsToolbar,
 #navigator-toolbox,
 #sidebar-box,
+#sidebar-main,
+sidebar-main,
+#sidebar,
 #nav-bar {
   box-shadow: none !important;
 }
@@ -85,6 +88,9 @@
 #PersonalToolbar,
 #navigator-toolbox,
 #sidebar-box,
+#sidebar-main,
+sidebar-main,
+#sidebar,
 #nav-bar {
   border: none !important;
 }
@@ -132,7 +138,10 @@
   #nav-bar {
     order: var(--uc-urlbar-position);
     width: var(--uc-urlbar-min-width);
-    transition: width 0.25s ease;
+    /* !important required: Firefox overrides our transition with
+       :root[sessionrestored][lwtheme] #nav-bar { transition-property:
+       background-color } when any lwtheme (Alpenglow, custom) is active. */
+    transition: width 0.25s ease !important;
     &.browser-titlebar {
       width: 100%;
     }
@@ -145,7 +154,7 @@
 
   #titlebar {
     width: calc(100vw - var(--uc-urlbar-min-width) - 1px);
-    transition: width 0.25s ease;
+    transition: width 0.25s ease !important;
   }
 
   #TabsToolbar {
@@ -229,6 +238,42 @@
   background: var(--toolbar-field-focus-background-color) !important;
 }
 
+/* result-menu button ([...]) — show dots, drop frame around them.
+   Two-pronged attack:
+   1. Override the CSS variables Firefox feeds into background-color across
+      hover/selected states (kills the grey at the source, regardless of
+      which rule consumes the var).
+   2. Brute-force transparent on button + wrapper selectors as defense.
+   background-color (not background!) keeps the dot icon (bg-image) intact. */
+.urlbarView,
+#urlbar {
+  --button-background-color: transparent !important;
+  --urlbarView-result-button-hover-background-color: transparent !important;
+  --urlbarView-result-button-selected-background-color: transparent !important;
+  --urlbarView-result-button-background-opacity: 0 !important;
+  --urlbarView-action-button-background-color: transparent !important;
+  --urlbarView-action-button-hover-background-color: transparent !important;
+  --urlbarView-hover-background: transparent !important;
+}
+
+.urlbarView-row-buttons,
+.urlbarView-button,
+.urlbarView-button:hover,
+.urlbarView-button:active,
+.urlbarView-button-menu,
+.urlbarView-button-menu:hover,
+.urlbarView-button-result-menu,
+.urlbarView-button-result-menu:hover,
+.urlbarView-button-result-menu:active,
+.urlbarView-row-button-menu,
+.urlbarView-row[selected] :is(.urlbarView-row-buttons, .urlbarView-button-menu, .urlbarView-button-result-menu),
+.urlbarView-row:hover :is(.urlbarView-row-buttons, .urlbarView-button-menu, .urlbarView-button-result-menu) {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
 .urlbar-icon,
 #urlbar-go-button {
   margin: auto;
@@ -236,6 +281,82 @@
 
 .urlbar-page-action {
   padding: 0 inherit !important;
+}
+
+
+/* ==========================================================================
+   SIDEBAR (incl. AI sidebar revamp) — kill panel border & splitter line
+   ========================================================================== */
+
+:root {
+  --sidebar-border-color: transparent !important;
+}
+
+/* splitter between content and sidebar — thin 2px line, still draggable */
+#sidebar-splitter {
+  border: none !important;
+  background: #282828 !important;
+  appearance: none !important;
+  width: 2px !important;
+  min-width: 2px !important;
+  max-width: 2px !important;
+}
+
+/* sidebar panel header (the "Anthropic Claude" bar) — hide entirely */
+#sidebar-header,
+.sidebar-panel-header {
+  display: none !important;
+}
+
+/* drop the 6px padding-bottom that leaves a strip below the chat panel */
+#sidebar-box {
+  padding: 0 !important;
+}
+
+/* square corners on all browser surfaces (Win 2000 vibe).
+   --browser-area-border-radius is the official knob (FF 138+).
+   Selectors below are a safety net in case Firefox bypasses the var. */
+:root {
+  --browser-area-border-radius: 0 !important;
+}
+
+.browserStack,
+#tabbrowser-tabbox,
+#sidebar-box,
+#sidebar-main,
+sidebar-main,
+.sidebar-panel,
+.sidebar-browser-stack,
+.browserContainer,
+browser[type="content"],
+#sidebar {
+  border-radius: 0 !important;
+}
+
+
+/* AI chatbot chrome — everything but the chat iframe lives inside
+   chrome://browser/content/genai/chat.html, not browser.xhtml.
+   #header = provider dropdown + settings/close buttons
+   #message-container = permission/error notifications (hidden = silent)
+   #summarize-btn-container = "Seite zusammenfassen" strip */
+@-moz-document url-prefix(chrome://browser/content/genai/) {
+  #header,
+  #message-container,
+  #summarize-btn-container {
+    display: none !important;
+  }
+
+  /* fill the panel — drop body padding & ensure container expands */
+  body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #browser-container,
+  #browser-container browser {
+    flex: 1 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
 }
 
 
