@@ -61,6 +61,26 @@
 
   /* Drag space — gap between tabs and toolbar buttons for window dragging */
   --uc-drag-space: 40px;
+
+  /* Findbar — floating search bar */
+  --findbar-top: 8px;
+  --findbar-right: 8px;
+  --findbar-width: 360px;
+
+  /* Show/Hide Find Bar Options
+   * Show: 1
+   * Hide: 0
+   */
+  --show-highlight-all:    1;
+  --show-match-case:       1;
+  --show-match-diacritics: 1;
+  --show-whole-words:      1;
+
+  /* Find Bar Options Position */
+  --highlight-all-position:    0;
+  --match-case-position:       1;
+  --match-diacritics-position: 2;
+  --whole-words-position:      3;
 }
 
 
@@ -697,6 +717,155 @@ browser[type="content"],
   width: 100%;
   color: light-dark(var(--tab-group-color-pale), var(--tab-group-label-text-dark)) !important;
   background-color: light-dark(var(--tab-group-color), var(--tab-group-color-invert)) !important;
+}
+
+
+/* ==========================================================================
+   FINDBAR — floating search bar (based on LittleFox)
+   ========================================================================== */
+
+:root {
+  --show-margin: round(up, calc((var(--show-highlight-all) + var(--show-match-case) + var(--show-match-diacritics) + var(--show-whole-words)) / 4));
+  --options-width: calc(34px*var(--show-highlight-all) + 34px*var(--show-match-case) + 34px*var(--show-match-diacritics) + 34px*var(--show-whole-words) + 4px*var(--show-margin));
+
+  --findbar-min-width: calc(500px - 2 * var(--findbar-right));
+  --findbar-min-width-expanded: calc(var(--findbar-min-width) + var(--options-width));
+  --findbar-max-width: calc(100vw - 2 * var(--findbar-right));
+  --findbar-width-use: clamp(var(--findbar-min-width-expanded), var(--findbar-width), var(--findbar-max-width));
+
+  --textbox-min-width: calc(var(--findbar-min-width) - 116px);
+  --textbox-width: calc(var(--findbar-width-use) - 116px - var(--options-width));
+}
+
+findbar {
+  position: absolute !important;
+  top: var(--findbar-top) !important;
+  left: var(--findbar-right) !important;
+  right: var(--findbar-right) !important;
+  width: var(--findbar-width-use) !important;
+  max-width: var(--findbar-max-width) !important;
+  margin-left: auto !important;
+  border: none !important;
+  border-radius: var(--uc-border-radius) !important;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+findbar {
+  opacity: 1 !important;
+  transform-origin: top !important;
+  transform: scaleY(1) translateY(0px) !important;
+  transition: opacity 100ms ease-out, transform 100ms ease-out, visibility 0s step-end !important;
+}
+findbar[hidden] {
+  opacity: 0 !important;
+  transform: scaleY(0.96) translateY(-4px) !important;
+  transition-delay: 0s, 0s, 100ms !important;
+}
+
+.findbar-textbox {
+  width: var(--textbox-width) !important;
+  min-width: var(--textbox-min-width) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.findbar-textbox:not([status]) {
+  background-color: transparent !important;
+}
+.findbar-textbox:not(:focus, [status]):hover {
+  background-color: var(--toolbar-field-background-color) !important;
+}
+
+label.found-matches {
+  position: absolute !important;
+  right: calc(100% - var(--textbox-width)) !important;
+  text-align: right !important;
+  margin: 0px !important;
+}
+
+.findbar-label:not(.found-matches) {
+  display: none !important;
+}
+
+.findbar-container > checkbox {
+  display: grid !important;
+  justify-items: center !important;
+  margin-left: 0px !important;
+  overflow: hidden !important;
+}
+.findbar-container > checkbox *{
+  display: none !important;
+}
+
+.findbar-highlight {
+  order: var(--highlight-all-position) !important;
+  width: calc(30px * var(--show-highlight-all)) !important;
+  height: calc(24px * var(--show-highlight-all)) !important;
+  margin-right: calc(4px * var(--show-highlight-all)) !important;
+}
+.findbar-case-sensitive {
+  order: var(--match-case-position) !important;
+  width: calc(30px * var(--show-match-case)) !important;
+  height: calc(24px * var(--show-match-case)) !important;
+  margin-right: calc(4px * var(--show-match-case)) !important;
+}
+.findbar-match-diacritics {
+  order: var(--match-diacritics-position) !important;
+  width: calc(30px * var(--show-match-diacritics)) !important;
+  height: calc(24px * var(--show-match-diacritics)) !important;
+  margin-right: calc(4px * var(--show-match-diacritics)) !important;
+}
+.findbar-entire-word {
+  order: var(--whole-words-position) !important;
+  width: calc(30px * var(--show-whole-words)) !important;
+  height: calc(24px * var(--show-whole-words)) !important;
+  margin-right: calc(4px * var(--show-whole-words)) !important;
+}
+.findbar-highlight::before {
+  content: "[ab]";
+  font-weight: bold;
+  color: var(--toolbar-color);
+}
+.findbar-case-sensitive::before {
+  content: "Aa";
+  font-weight: bold;
+  color: var(--toolbar-color);
+}
+.findbar-match-diacritics::before {
+  content: "aá";
+  font-weight: bold;
+  color: var(--toolbar-color);
+}
+.findbar-entire-word::before {
+  content: "ab";
+  font-weight: bold;
+  color: var(--toolbar-color);
+  grid-row: 1;
+  grid-column: 1;
+}
+.findbar-entire-word::after {
+  content: "";
+  width: 1.3em;
+  height: 0.2em;
+  margin-bottom: -1em;
+  border-left: 2px solid var(--toolbar-color);
+  border-right: 2px solid var(--toolbar-color);
+  border-bottom: 1px solid var(--toolbar-color);
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.findbar-container > checkbox:not([checked]):hover {
+  background-color: var(--toolbarbutton-hover-background) !important;
+  border-radius: 4px !important;
+}
+.findbar-container > checkbox[checked] {
+  background-color: var(--toolbarbutton-active-background) !important;
+  border-radius: 4px !important;
+}
+
+.findbar-closebutton {
+  margin-left: calc(4px * var(--show-margin)) !important;
 }
 
 
