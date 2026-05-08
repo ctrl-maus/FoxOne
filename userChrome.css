@@ -162,7 +162,7 @@ sidebar-main,
   }
 
   #tabbrowser-tabs {
-    max-width: calc(100% - var(--uc-window-buttons-width) - var(--uc-hamburger-width) - var(--uc-toolbar-button-width)) !important;
+    max-width: calc(100% - var(--uc-hamburger-width) - var(--uc-toolbar-button-width)) !important;
   }
 
   #navigator-toolbox:focus-within #nav-bar {
