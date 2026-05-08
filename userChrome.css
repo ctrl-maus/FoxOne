@@ -55,6 +55,12 @@
 
   /* Extra toolbar button width (extensions, uBlock etc.) */
   --uc-toolbar-button-width: 36px;
+  
+  /* Standalone new-tab button width (set to 0 if removed from toolbar) */
+  --uc-newtab-width: 36px;
+
+  /* Drag space — gap between tabs and toolbar buttons for window dragging */
+  --uc-drag-space: 40px;
 }
 
 
@@ -162,8 +168,8 @@ sidebar-main,
   }
 
   #tabbrowser-tabs {
-    max-width: calc(100% - var(--uc-hamburger-width) - var(--uc-toolbar-button-width)) !important;
-  }
+    max-width: calc(100% - var(--uc-hamburger-width) - var(--uc-toolbar-button-width) - var(--uc-drag-space) - var(--uc-newtab-width)) !important;
+	}
 
   #navigator-toolbox:focus-within #nav-bar {
     width: var(--uc-urlbar-max-width);
