@@ -1,7 +1,7 @@
 # FoxOne
 
 
-**A minimalist one-line Firefox theme**
+**A minimalist one-line Firefox theme.**
 
 ![FoxOne Preview](https://github.com/user-attachments/assets/9d5588ce-c035-4f61-baf0-2a82e85199a3)
 
