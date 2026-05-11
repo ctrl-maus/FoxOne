@@ -108,7 +108,7 @@
     --toolbarbutton-icon-fill-attention: #fabd2f !important;
 
     /* URL bar */
-    --toolbar-field-background-color: #1d2021 !important;
+    --toolbar-field-background-color: #282828 !important;
     --toolbar-field-color: #FFFFFF !important;
     --toolbar-field-focus-color: #FFFFFF !important;
     --toolbar-field-focus-border-color: #fabd2f !important;
@@ -309,6 +309,14 @@ sidebar-main,
   box-shadow: none !important;
 }
 
+#urlbar,
+#urlbar *,
+#urlbar-background,
+#urlbar-input-container,
+#urlbar-container {
+  border-radius: 0 !important;
+}
+
 #urlbar-background {
   border: transparent !important;
 }
@@ -360,6 +368,12 @@ sidebar-main,
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
+}
+
+.urlbarView-button-result-menu:hover,
+.urlbarView-button-menu:hover,
+.urlbarView-row:hover .urlbarView-button-result-menu:hover {
+  fill: #fabd2f !important;
 }
 
 .urlbar-icon,
@@ -490,6 +504,32 @@ browser[type="content"],
 }
 
 #identity-box.extensionPage { display: none !important; }
+
+/* Container indicator — hide by default, reveal on hover/focus */
+#userContext-label,
+#userContext-indicator {
+  max-width: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: max-width 0.2s ease, opacity 0.2s ease,
+              padding 0.2s ease, margin 0.2s ease !important;
+}
+
+#nav-bar:hover #userContext-indicator,
+#urlbar[focused="true"] #userContext-indicator {
+  max-width: 200px !important;
+  opacity: 1 !important;
+  margin-inline: 2px !important;
+}
+
+#nav-bar:hover #userContext-label,
+#urlbar[focused="true"] #userContext-label {
+  max-width: 200px !important;
+  opacity: 1 !important;
+  margin-inline-start: 2px !important;
+}
 
 /* Hide unwanted page action icons — reveal on hover/focus */
 #reader-mode-button,
@@ -761,7 +801,7 @@ findbar {
   max-width: var(--findbar-max-width) !important;
   margin-left: auto !important;
   border: none !important;
-  border-radius: var(--uc-border-radius) !important;
+  border-radius: 0 !important;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
@@ -781,6 +821,7 @@ findbar[hidden] {
   width: var(--textbox-width) !important;
   min-width: var(--textbox-min-width) !important;
   border: none !important;
+  border-radius: 0 !important;
   outline: none !important;
   box-shadow: none !important;
 }
