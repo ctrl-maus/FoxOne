@@ -48,6 +48,12 @@ All configuration lives in the `:root` block at the top of `userChrome.css`.
 | `--uc-show-context-splitview` | `none` | Context menu "Open Link in Split View" (`none` = hidden, `-moz-box` = visible) |
 | `--uc-show-all-tabs-button` | `none` | All-tabs button (`none` = hidden, `-moz-box` = visible) |
 
+### Scrollbar (`userContent.css`)
+
+| Variable | Default | Description |
+|---|---|---|
+| `--uc-content-scrollbar` | `none` | Scrollbar in web content (`none` = hidden, `thin` = slim, `auto` = OS default) |
+
 ### Find Bar
 
 | Variable | Default | Description |
