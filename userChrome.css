@@ -85,6 +85,9 @@
   --match-diacritics-position: 2;
   --whole-words-position:      3;
 
+  /* Tab loading progress bar (1 = show, 0 = hide) */
+  --uc-show-loading-progress: 1;
+
 }
 
 
@@ -404,6 +407,77 @@ sidebar-main,
 
 .urlbar-page-action {
   padding: 0 inherit !important;
+}
+
+
+/* ==========================================================================
+   LOADING PROGRESS BAR — active tab bottom indicator.
+   Animated glow bar at the bottom of the selected tab while loading.
+   Same visual style as the pinned-tab indicator (::after), using ::before
+   to avoid conflicts.
+   Note: transform must NOT be !important — animations can't override it.
+   ========================================================================== */
+
+/* Bottom bar — hidden default on ALL tabs */
+.tabbrowser-tab .tab-background::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: var(--container-tabs-indicator-margin) !important;
+  right: var(--container-tabs-indicator-margin) !important;
+  height: 1px !important;
+  background: var(--tab-selected-textcolor, #fabd2f) !important;
+  box-shadow: var(--uc-identity-glow) var(--tab-selected-textcolor, #fabd2f) !important;
+  transform-origin: left !important;
+  transform: scaleX(0);
+  opacity: 0 !important;
+  transition: opacity 0.3s ease 0.15s !important;
+  pointer-events: none !important;
+}
+
+/* Bottom bar — animated on ALL busy tabs */
+.tabbrowser-tab[busy] .tab-background::before {
+  opacity: var(--uc-show-loading-progress) !important;
+  transition: none !important;
+  animation: uc-progress 2.5s cubic-bezier(0.2, 0.6, 0.4, 1) forwards !important;
+}
+
+/* Inactive busy tabs — white to match tab text color */
+.tabbrowser-tab[busy]:not([selected]) .tab-background::before {
+  background: var(--toolbar-color, #FFFFFF) !important;
+  box-shadow: var(--uc-identity-glow) var(--toolbar-color, #FFFFFF) !important;
+}
+
+/* Top glow — all busy tabs (no base state = no pinned indicator conflict) */
+.tabbrowser-tab[busy] .tab-background::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: var(--container-tabs-indicator-margin) !important;
+  right: var(--container-tabs-indicator-margin) !important;
+  height: 1px !important;
+  background: var(--tab-selected-textcolor, #fabd2f) !important;
+  box-shadow: var(--uc-identity-glow) var(--tab-selected-textcolor, #fabd2f) !important;
+  transform-origin: left !important;
+  opacity: var(--uc-show-loading-progress) !important;
+  animation: uc-progress 2.5s cubic-bezier(0.2, 0.6, 0.4, 1) forwards !important;
+  pointer-events: none !important;
+}
+
+/* Top glow — inactive tabs use white */
+.tabbrowser-tab[busy]:not([selected]) .tab-background::after {
+  background: var(--toolbar-color, #FFFFFF) !important;
+  box-shadow: var(--uc-identity-glow) var(--toolbar-color, #FFFFFF) !important;
+}
+
+@keyframes uc-progress {
+  0%   { transform: scaleX(0); }
+  15%  { transform: scaleX(0.35); }
+  40%  { transform: scaleX(0.65); }
+  70%  { transform: scaleX(0.82); }
+  100% { transform: scaleX(0.95); }
 }
 
 
