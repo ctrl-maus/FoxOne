@@ -85,7 +85,7 @@
   --match-diacritics-position: 2;
   --whole-words-position:      3;
 
-  /* URL bar background (#282828 = blends with toolbar, #3c3836 = distinct) */
+  /* URL bar background (#282828 = blends with toolbar, #3c3836 = distinct, #252829 = old darker style) */
   --uc-urlbar-background: #282828;
 
   /* Tab loading progress bar (1 = show, 0 = hide) */
