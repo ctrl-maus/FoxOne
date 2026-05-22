@@ -88,6 +88,9 @@
   /* URL bar background (#282828 = blends with toolbar, #3c3836 = distinct, #252829 = old darker style) */
   --uc-urlbar-background: #282828;
 
+  /* Rounded corners on URL bar and findbar (1 = rounded, 0 = square) */
+  --uc-urlbar-rounded: 0;
+
   /* Tab loading progress bar (1 = show, 0 = hide) */
   --uc-show-loading-progress: 1;
 
@@ -341,7 +344,7 @@ sidebar-main,
 #urlbar-background,
 #urlbar-input-container,
 #urlbar-container {
-  border-radius: 0 !important;
+  border-radius: calc(var(--uc-urlbar-rounded) * var(--uc-border-radius)) !important;
 }
 
 #urlbar-background {
@@ -912,7 +915,7 @@ findbar {
   max-width: var(--findbar-max-width) !important;
   margin-left: auto !important;
   border: none !important;
-  border-radius: 0 !important;
+  border-radius: calc(var(--uc-urlbar-rounded) * var(--uc-border-radius)) !important;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
@@ -932,7 +935,7 @@ findbar[hidden] {
   width: var(--textbox-width) !important;
   min-width: var(--textbox-min-width) !important;
   border: none !important;
-  border-radius: 0 !important;
+  border-radius: calc(var(--uc-urlbar-rounded) * var(--uc-border-radius)) !important;
   outline: none !important;
   box-shadow: none !important;
 }
