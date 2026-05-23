@@ -236,6 +236,13 @@ sidebar-main,
     flex-direction: row;
   }
 
+  /* Prevent notifications toolbar from becoming a 1px flex column —
+     force it to its own row so it collapses when empty. */
+  #notifications-toolbar {
+    width: 100% !important;
+    order: 99 !important;
+  }
+
   #nav-bar {
     order: var(--uc-urlbar-position);
     width: var(--uc-urlbar-min-width);
@@ -332,6 +339,7 @@ sidebar-main,
   box-shadow: none !important;
   background: transparent !important;
 }
+
 
 #urlbar,
 #urlbar * {
