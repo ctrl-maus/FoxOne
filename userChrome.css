@@ -108,7 +108,7 @@
   --uc-show-loading-progress: 0;
 
   /* Navigation buttons — auto-hide with hover reveal (0 = always show, 1 = reveal with hover and focus, 2 = reveal with hover) */
-  --uc-autohide-nav-buttons: 2;
+  --uc-autohide-nav-buttons: 0;
 
   /* Active tab highlight (combine or use individually)
    * Background: set a hex color to enable (e.g. #3c3836), transparent = off
