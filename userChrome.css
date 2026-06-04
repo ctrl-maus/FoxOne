@@ -647,6 +647,46 @@ browser[type="content"],
    HIDDEN ELEMENTS
    ========================================================================== */
 
+/* Navigation buttons — auto-hide with hover reveal (1 = hide, 0 = always show) */
+#nav-bar {
+  container-type: inline-size style;
+}
+
+/* Only apply when enabled */
+@container style(--uc-autohide-nav-buttons: 1) {
+
+  #back-button,
+  #forward-button,
+  #reload-button,
+  #stop-reload-button {
+    opacity: 0 !important;
+    max-width: 0 !important;
+    min-width: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    transition: all 0.2s ease !important;
+  }
+
+  #nav-bar:hover :is(
+    #back-button,
+    #forward-button,
+    #reload-button,
+    #stop-reload-button
+  ),
+  #nav-bar:focus-within :is(
+    #back-button,
+    #forward-button,
+    #reload-button,
+    #stop-reload-button
+  ) {
+    opacity: 1 !important;
+    max-width: 32px !important;
+    width: 32px !important;
+  }
+}
+
 #pageActionButton { display: none !important; }
 #urlbar-go-button { display: none !important; }
 
