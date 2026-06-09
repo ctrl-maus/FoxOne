@@ -72,6 +72,7 @@ Both options can be combined for maximum visibility.
 | `--uc-show-all-tabs-button` | `none` | All-tabs button (`none` = hidden, `-moz-box` = visible) |
 | `--uc-autohide-nav-buttons` | `0` | Navigation buttons auto-hide (`0` = always visible, `1` = reveal on hover and focus, `2` = reveal on hover only) |
 | `--uc-hide-nav-buttons` | `0` | Remove navigation buttons entirely (`1` = hide, `0` = show) |
+| `--uc-hide-urlbar-buttons` | `0` | Hide URL-bar clutter icons — shield (tracking protection), reader mode, translations, bookmark star, add-to-taskbar (`1` = hide all, `0` = default reveal) |
 
 ### Scrollbar (`userContent.css`)
 

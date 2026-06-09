@@ -113,6 +113,11 @@
   /* Navigation buttons — remove back/forward/reload for mouse button and shortcut users (1 = hide, 0 = show) */
   --uc-hide-nav-buttons: 0;
 
+  /* URL-bar clutter icons — fully hide shield (tracking protection), reader
+   * mode, translations, bookmark star and add-to-taskbar so they can't be
+   * misclicked when aiming for the URL bar (1 = hide all, 0 = default reveal) */
+  --uc-hide-urlbar-buttons: 0;
+
   /* Active tab highlight (combine or use individually)
    * Background: set a hex color to enable (e.g. #3c3836), transparent = off
    * Underline: colored bar below active tab (1 = show, 0 = hide) */
@@ -911,6 +916,23 @@ browser[type="content"],
   pointer-events: auto !important;
   padding: 6px !important;
   margin: 0 !important;
+}
+
+/* Opt-in: fully hide URL-bar clutter icons, no hover/focus reveal.
+   display:none removes them regardless of the reveal rules above, so misclicks
+   while aiming for the URL bar are impossible. The shield/security indicator
+   (Nova: #trust-icon-container; pre-Nova: #tracking-protection-icon-container)
+   and #star-button-box are otherwise always visible; this is the only thing
+   that hides them. (Issue #21) */
+@container style(--uc-hide-urlbar-buttons: 1) {
+  #trust-icon-container,
+  #tracking-protection-icon-container,
+  #reader-mode-button,
+  #taskbar-tabs-button,
+  #translations-button,
+  #star-button-box {
+    display: none !important;
+  }
 }
 
 /* Hide private browsing indicator */
