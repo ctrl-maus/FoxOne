@@ -1093,10 +1093,16 @@ browser[type="content"],
     pointer-events: auto !important;
     padding-inline: revert !important;
   }
-  /* restore the hamburger clearance on the revealed cluster's last item */
+  /* Hamburger clearance on the revealed cluster's last item as PADDING, not
+     margin, so the 44px lives inside the item's own hover box. That closes the
+     dead zone between the last icon and the fixed hamburger: the toolbaritem
+     :hover bridge now spans the whole gap, so the icons stay open while the
+     pointer travels from the hamburger onto them. max-width grows by the same
+     amount so the icon is not squeezed by the padding (border-box). (#13) */
   :root:has(#PanelUI-button:hover) #TabsToolbar-customization-target > toolbaritem:last-of-type,
   :root:has(#TabsToolbar-customization-target > toolbaritem:hover) #TabsToolbar-customization-target > toolbaritem:last-of-type {
-    margin-inline-end: var(--uc-hamburger-width) !important;
+    max-width: calc(60px + var(--uc-hamburger-width)) !important;
+    padding-inline-end: var(--uc-hamburger-width) !important;
   }
 }
 
