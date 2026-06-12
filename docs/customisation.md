@@ -1,5 +1,10 @@
 # Customisation
-
+---
+> Running classic (pre-Nova) Firefox?
+> 
+> The stylesheet is dual-written and should still work, but it is no longer tested there. 
+> For a fully-tested classic build, pin the `2.3` as an earlier base. 
+---
 All configuration lives in the `:root` block at the top of `userChrome.css`.
 
 ### Color Palette
