@@ -2,7 +2,7 @@
 ---
 > Running classic (pre-Nova) Firefox?
 >
-> From release 3.0 onward, FoxOne targets the Nova UI. Parts may still work on classic Firefox, but this is untested. For a known-good classic build, use the [2.3](https://github.com/Firnschnee/FoxOne/releases/tag/2.3) release.
+> From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the [2.3](https://github.com/Firnschnee/FoxOne/releases/tag/2.3) release.
 ---
 All configuration lives in the `:root` block at the top of `userChrome.css`.
 
