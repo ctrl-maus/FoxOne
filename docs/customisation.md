@@ -1,5 +1,9 @@
 # Customisation
-
+---
+> Running classic (pre-Nova) Firefox?
+>
+> From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the [2.3](https://github.com/Firnschnee/FoxOne/releases/tag/2.3) release.
+---
 All configuration lives in the `:root` block at the top of `userChrome.css`.
 
 ### Color Palette
@@ -30,8 +34,8 @@ All configuration lives in the `:root` block at the top of `userChrome.css`.
 
 | Variable | Default | Description |
 |---|---|---|
-| `--uc-active-tab-width` | `clamp(100px, 30vw, 250px)` | Active tab width |
-| `--uc-inactive-tab-width` | `clamp(100px, 20vw, 200px)` | Inactive tab width |
+| `--uc-active-tab-width` | `clamp(100px, 30vw, 190px)` | Active tab width (narrow-window default; widened to `…250px` once the window reaches ~1710 *physical* px, i.e. ~2/3 of WQHD — the threshold is tiered by `resolution`/dppx so it fires at the same physical size under DPI scaling) |
+| `--uc-inactive-tab-width` | `clamp(100px, 20vw, 120px)` | Inactive tab width (ceiling kept below the active one so the active tab stays visibly larger; widened to `…200px` at the same ~1710 physical-px threshold) |
 | `--uc-tab-min-width` | `76px` | Tab minimum width (Firefox default: `76px`, lower e.g. `36px` to fit more before overflow) |
 | `--uc-tab-hover-text` | `#ffda85` | Inactive tab title color on hover |
 | `--show-tab-close-button` | `none` | Tab close button (`none` = hidden, `-moz-inline-block` = visible) |
@@ -58,7 +62,7 @@ Both options can be combined for maximum visibility.
 
 | Variable | Default | Description |
 |---|---|---|
-| `--uc-window-buttons-width` | `138px` | Windows control button width (auto `0px` on macOS) |
+| `--uc-window-buttons-width` | `138px` | Window control button width. Fallback only: on non-macOS the hamburger auto-tracks the real control box via CSS anchor positioning; used on macOS and on Firefox builds without anchor support (auto `0px` on macOS) |
 | `--uc-hamburger-width` | `44px` | Hamburger menu reserved width |
 | `--uc-toolbar-button-width` | `36px` | Extension button width (per button) |
 | `--uc-newtab-width` | `36px` | Standalone new-tab button width (`0` if removed) |
@@ -72,6 +76,8 @@ Both options can be combined for maximum visibility.
 | `--uc-show-all-tabs-button` | `none` | All-tabs button (`none` = hidden, `-moz-box` = visible) |
 | `--uc-autohide-nav-buttons` | `0` | Navigation buttons auto-hide (`0` = always visible, `1` = reveal on hover and focus, `2` = reveal on hover only) |
 | `--uc-hide-nav-buttons` | `0` | Remove navigation buttons entirely (`1` = hide, `0` = show) |
+| `--uc-hide-urlbar-buttons` | `0` | Hide URL-bar clutter icons — shield (tracking protection), reader mode, translations, bookmark star, add-to-taskbar (`1` = hide all, `0` = default reveal) |
+| `--uc-hide-extension-icons` | `0` | Hide pinned toolbar extension icons, reveal them on hamburger hover (`1` = hide + hover-reveal, `0` = always show) |
 
 ### Scrollbar (`userContent.css`)
 

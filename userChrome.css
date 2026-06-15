@@ -39,9 +39,17 @@
   /* Vertical URL Bar spacing adjustment */
   --uc-urlbar-top-spacing: 1px;
 
-  /* Dynamic tab widths */
-  --uc-active-tab-width: clamp(100px, 30vw, 250px);
-  --uc-inactive-tab-width: clamp(100px, 20vw, 200px);
+  /* Dynamic tab widths. The inactive ceiling is intentionally lower than the
+     active one: inactive tabs cap sooner, freeing strip space for the active
+     tab to grow visibly larger. Raise it back toward the active ceiling and the
+     active-tab size advantage only appears at very wide strips (issue #7).
+
+     These are the narrow-window defaults (< 1710px). At and above 1710px
+     (~2/3 of WQHD) the ceilings are widened back to the pre-#7 pair so the
+     strip distributes evenly and tabs read uniformly again — see the
+     min-width: 1710px override below the :root block. */
+  --uc-active-tab-width: clamp(100px, 30vw, 190px);
+  --uc-inactive-tab-width: clamp(100px, 20vw, 120px);
   /* Tab min width (opt-in): 76px = Firefox default (browser.tabs.tabMinWidth).
      Lower it (e.g. 36px) to allow narrower tabs / fit more before overflow scroll */
   --uc-tab-min-width: 76px;
@@ -63,7 +71,10 @@
   --container-tabs-indicator-margin: 10px;
   --uc-identity-glow: 0 1px 10px 1px;
 
-  /* Windows control button width — used for Hamburger positioning */
+  /* Windows control button width. Fallback only: on non-macOS the hamburger
+     auto-tracks the real window-control box via CSS anchor positioning, so
+     this value is used just on macOS and on Firefox builds without anchor
+     support. No need to measure it by hand on a modern build. */
   --uc-window-buttons-width: 138px;
 
   /* Hamburger button width — reserved in tab bar to prevent overlap */
@@ -75,8 +86,9 @@
   /* Standalone new-tab button width (set to 0 if removed from toolbar) */
   --uc-newtab-width: 36px;
 
-  /* Drag space — gap between tabs and toolbar buttons for window dragging */
-  --uc-drag-space: 40px;
+  /* Drag space — grab zone after the tabs for moving the window. Kept small;
+     it is functional space, not just a gap, so don't drop it to 0. */
+  --uc-drag-space: 20px;
 
   /* Findbar — floating search bar */
   --findbar-top: 8px;
@@ -113,12 +125,67 @@
   /* Navigation buttons — remove back/forward/reload for mouse button and shortcut users (1 = hide, 0 = show) */
   --uc-hide-nav-buttons: 0;
 
+  /* URL-bar clutter icons — fully hide shield (tracking protection), reader
+   * mode, translations, bookmark star and add-to-taskbar so they can't be
+   * misclicked when aiming for the URL bar (1 = hide all, 0 = default reveal) */
+  --uc-hide-urlbar-buttons: 0;
+
+  /* Pinned toolbar extension icons — hide and reveal on hamburger hover, to
+   * keep the one-line layout clean (1 = hide + hover-reveal, 0 = always show) */
+  --uc-hide-extension-icons: 1;
+
   /* Active tab highlight (combine or use individually)
    * Background: set a hex color to enable (e.g. #3c3836), transparent = off
    * Underline: colored bar below active tab (1 = show, 0 = hide) */
   --uc-active-tab-background: transparent;
   --uc-active-tab-underline: 0;
 
+}
+
+/* Wide-window tab widths (>= 1710px physical, ~2/3 of WQHD). Restores the
+   pre-#7 ceilings: inactive caps near the active one, so flex distributes strip
+   space evenly and tabs look uniform — the everyday-comfortable behaviour.
+   Below that the narrow defaults above keep the active tab visibly larger.
+
+   The catch: `width` is CSS pixels, which DPI scaling shrinks (1920 physical
+   at 125% = 1536 CSS px), so a plain `min-width: 1710px` never fires on a
+   scaled display. CSS can't read the scale factor as a number, but it can
+   match it via `resolution` (dppx == OS scale). So the threshold is tiered per
+   scale, each set to 1710 / scale CSS px, all writing the SAME wide values —
+   overlap between tiers is harmless. The highest dppx tier <= the current
+   scale wins, giving a constant ~1710 *physical*-px trigger at any scaling.
+     100%  -> 1710 / 1.00 = 1710     150%  -> 1710 / 1.50 = 1140
+     125%  -> 1710 / 1.25 = 1368     175%  -> 1710 / 1.75 =  977
+                                     200%  -> 1710 / 2.00 =  855 */
+@media (min-width: 1710px) {
+  :root {
+    --uc-active-tab-width: clamp(100px, 30vw, 250px);
+    --uc-inactive-tab-width: clamp(100px, 20vw, 200px);
+  }
+}
+@media (min-resolution: 1.2dppx) and (min-width: 1368px) {
+  :root {
+    --uc-active-tab-width: clamp(100px, 30vw, 250px);
+    --uc-inactive-tab-width: clamp(100px, 20vw, 200px);
+  }
+}
+@media (min-resolution: 1.45dppx) and (min-width: 1140px) {
+  :root {
+    --uc-active-tab-width: clamp(100px, 30vw, 250px);
+    --uc-inactive-tab-width: clamp(100px, 20vw, 200px);
+  }
+}
+@media (min-resolution: 1.7dppx) and (min-width: 977px) {
+  :root {
+    --uc-active-tab-width: clamp(100px, 30vw, 250px);
+    --uc-inactive-tab-width: clamp(100px, 20vw, 200px);
+  }
+}
+@media (min-resolution: 1.95dppx) and (min-width: 855px) {
+  :root {
+    --uc-active-tab-width: clamp(100px, 30vw, 250px);
+    --uc-inactive-tab-width: clamp(100px, 20vw, 200px);
+  }
 }
 
 
@@ -134,13 +201,22 @@
     --toolbar-bgcolor: var(--uc-color-base) !important;
     --toolbar-color: var(--uc-color-text) !important;
     --lwt-text-color: var(--uc-color-text) !important;
+    /* Nova renamed the toolbar/toolbox colour tokens (--toolbar-bgcolor →
+       --toolbar-background-color, plus --toolbox-background-color for
+       chrome-blocks). FoxOne's old override misses them, so the bookmarks
+       bar and sidebar drifted to #2b2a33. Pin both to base. */
+    --toolbar-background-color: var(--uc-color-base) !important;
+    --toolbox-background-color: var(--uc-color-base) !important;
 
     /* Tabs */
     --uc-highlight-colour: var(--uc-color-base);
     --lwt-tab-line-color: var(--uc-color-accent) !important;
     --tab-selected-textcolor: var(--uc-color-accent) !important;
-    /* Kill native grey hover background – hover is a title-colour cue (issue #16) */
+    /* Kill native grey hover background – hover is a title-colour cue (issue #16).
+       Nova renamed the token to --tab-background-color-hover (word order
+       flipped, tab.tokens.css); override both names. */
     --tab-hover-background-color: transparent !important;
+    --tab-background-color-hover: transparent !important;
 
     /* Icons */
     --lwt-toolbarbutton-icon-fill-attention: var(--uc-color-accent) !important;
@@ -232,12 +308,25 @@ sidebar-main,
   display: none !important;
 }
 
-/* fix Shield Icon padding */
+/* fix Shield Icon padding — Nova moved urlbar-input-container from id to
+   class, so match both. */
 #urlbar-input-container[pageproxystate="valid"]
+  > #tracking-protection-icon-container
+  > #tracking-protection-icon-box
+  > #tracking-protection-icon,
+.urlbar-input-container[pageproxystate="valid"]
   > #tracking-protection-icon-container
   > #tracking-protection-icon-box
   > #tracking-protection-icon {
   padding-bottom: 1px;
+}
+
+/* Nova added #trust-icon (site-info/security icon) inside the new
+   #trust-icon-container, sitting next to a flex #trust-label. The icon box
+   is a symmetric 16x16 (no margin/padding), yet Nova renders it ~2px too
+   high relative to the other urlbar icons. Nudge it down to align. */
+#trust-icon {
+  margin-top: 2px !important;
 }
 
 #TabsToolbar { order: 2; }
@@ -248,6 +337,10 @@ sidebar-main,
   box-shadow: inset 0 0 50vh rgba(0, 0, 0, var(--uc-darken-toolbar)) !important;
   order: var(--uc-toolbar-position);
   width: 100%;
+  /* Nova sets the bookmarks bar background directly (#2b2a33, the default
+     dark toolbar colour) instead of inheriting --toolbar-bgcolor, so it
+     drifts from the navbar. Pin it to the palette base. */
+  background-color: var(--uc-color-base) !important;
 }
 
 #statuspanel #statuspanel-label {
@@ -258,80 +351,81 @@ sidebar-main,
 
 
 /* ==========================================================================
-   RESPONSIVE — One-line layout at >= 1000px
+   ONE-LINE LAYOUT – urlbar shares the toolbar row with the tabs.
+   Always on, at every window width. When urlbar + tabs no longer fit
+   comfortably, tabs shrink to their min-width and the strip scrolls
+   (native arrowscrollbox). Deliberately no width breakpoint: switching the
+   toolbox flex layout on resize leaves the urlbar's paint layer stale until
+   a repaint (Ctrl+L / tab switch), so the structure stays constant.
    ========================================================================== */
 
-@media (min-width: 1000px) {
-  #navigator-toolbox {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-  }
+#navigator-toolbox {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
 
-  /* Prevent notifications toolbar from becoming a 1px flex column —
-     force it to its own row so it collapses when empty. */
-  #notifications-toolbar {
-    width: 100% !important;
-    order: 99 !important;
-  }
+/* Prevent notifications toolbar from becoming a 1px flex column —
+   force it to its own row so it collapses when empty. */
+#notifications-toolbar {
+  width: 100% !important;
+  order: 99 !important;
+}
 
-  #nav-bar {
-    order: var(--uc-urlbar-position);
-    width: var(--uc-urlbar-min-width);
-    /* !important required: Firefox overrides our transition with
-       :root[sessionrestored][lwtheme] #nav-bar { transition-property:
-       background-color } when any lwtheme (Alpenglow, custom) is active. */
-    transition: width 0.25s ease !important;
-    &.browser-titlebar {
-      width: 100%;
-    }
-  }
-
-  #nav-bar #urlbar-container {
-    min-width: 0px !important;
-    width: auto !important;
-  }
-
-  #titlebar {
-    width: calc(100vw - var(--uc-urlbar-min-width) - 1px);
-    transition: width 0.25s ease !important;
-  }
-
-  #TabsToolbar {
+#nav-bar {
+  order: var(--uc-urlbar-position);
+  width: var(--uc-urlbar-min-width);
+  /* !important required: Firefox overrides our transition with
+     :root[sessionrestored][lwtheme] #nav-bar { transition-property:
+     background-color } when any lwtheme (Alpenglow, custom) is active. */
+  transition: width 0.25s ease !important;
+  &.browser-titlebar {
     width: 100%;
   }
+}
 
-  #tabbrowser-tabs:not([orient="vertical"]) {
-    max-width: calc(100% - var(--uc-hamburger-width) - var(--uc-toolbar-button-width) - var(--uc-drag-space) - var(--uc-newtab-width)) !important;
-	}
+#nav-bar #urlbar-container {
+  min-width: 0px !important;
+  width: auto !important;
+}
 
-  #navigator-toolbox:focus-within #nav-bar {
-    width: var(--uc-urlbar-max-width);
-    &.browser-titlebar {
-      width: 100%;
-    }
+#titlebar {
+  width: calc(100vw - var(--uc-urlbar-min-width) - 1px);
+  transition: width 0.25s ease !important;
+}
+
+#TabsToolbar {
+  width: 100%;
+}
+
+#tabbrowser-tabs:not([orient="vertical"]) {
+  max-width: calc(100% - var(--uc-hamburger-width) - var(--uc-toolbar-button-width) - var(--uc-drag-space) - var(--uc-newtab-width)) !important;
+}
+
+#navigator-toolbox:focus-within #nav-bar {
+  width: var(--uc-urlbar-max-width);
+  &.browser-titlebar {
+    width: 100%;
   }
-  #navigator-toolbox:focus-within #titlebar {
-    width: calc(100vw - var(--uc-urlbar-max-width) - 1px);
-  }
+}
+#navigator-toolbox:focus-within #titlebar {
+  width: calc(100vw - var(--uc-urlbar-max-width) - 1px);
 }
 
 /* Vertical tabs — toolbar layout override.
    Tabs live in the sidebar, so the toolbar only holds URL bar + buttons.
    Uses :has() to detect vertical mode reliably in userChrome.css. */
-@media (min-width: 1000px) {
-  :root:has(#tabbrowser-tabs[orient="vertical"]) #nav-bar {
-    flex: 1 !important;
-    width: auto !important;
-  }
+:root:has(#tabbrowser-tabs[orient="vertical"]) #nav-bar {
+  flex: 1 !important;
+  width: auto !important;
+}
 
-  :root:has(#tabbrowser-tabs[orient="vertical"]) #titlebar {
-    width: auto !important;
-  }
+:root:has(#tabbrowser-tabs[orient="vertical"]) #titlebar {
+  width: auto !important;
+}
 
-  :root:has(#tabbrowser-tabs[orient="vertical"]) #PanelUI-button {
-    position: static !important;
-  }
+:root:has(#tabbrowser-tabs[orient="vertical"]) #PanelUI-button {
+  position: static !important;
 }
 
 
@@ -354,26 +448,24 @@ sidebar-main,
   /* Position traffic lights at the left edge of the toolbar, vertically
      centred.  absolute (not fixed) so the buttons track the toolbox,
      not the viewport — gives the correct macOS inset. */
-  @media (min-width: 1000px) {
-    #navigator-toolbox {
-      position: relative !important;
-    }
+  #navigator-toolbox {
+    position: relative !important;
+  }
 
-    .titlebar-buttonbox-container {
-      position: absolute !important;
-      left: 0 !important;
-      top: 12px !important;
-      z-index: 1000 !important;
-      display: block !important;
-    }
+  .titlebar-buttonbox-container {
+    position: absolute !important;
+    left: 0 !important;
+    top: 12px !important;
+    z-index: 1000 !important;
+    display: block !important;
+  }
 
-    /* Reserve left-side space — box-sizing ensures padding stays within
-       the nav-bar's flex width instead of overflowing the layout.
-       Drops in fullscreen where macOS hides the traffic lights. */
-    :root:not([inFullscreen]) #nav-bar {
-      box-sizing: border-box !important;
-      padding-inline-start: var(--uc-traffic-light-width) !important;
-    }
+  /* Reserve left-side space — box-sizing ensures padding stays within
+     the nav-bar's flex width instead of overflowing the layout.
+     Drops in fullscreen where macOS hides the traffic lights. */
+  :root:not([inFullscreen]) #nav-bar {
+    box-sizing: border-box !important;
+    padding-inline-start: var(--uc-traffic-light-width) !important;
   }
 }
 
@@ -402,9 +494,35 @@ sidebar-main,
   border-bottom: 0 solid transparent !important;
 }
 
+/* Nova frames every .chrome-block container (toolbox, sidebar, content) with
+   a 4px margin and an 8px radius (--chrome-block-radius), letting the window
+   background show through as a border and leaving panels floating inset.
+   #navigator-toolbox, #sidebar-main and others all carry class="chrome-block".
+   FoxOne is edge-to-edge, so flatten them all at the source. Side effects:
+   removes the toolbox 4px top margin (realigns #PanelUI-button, fixed top:0),
+   the sidebar side gaps, and the AI-panel height/strip mismatch. */
+.chrome-block {
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Nova insets the web content on #browser (the flex hbox wrapping sidebar +
+   content): padding pushed the page off the window edge, and a 4px flex gap
+   (column + row) left strips between content and sidebar and a height/strip
+   mismatch on the AI panel. Remove both — the 2px #sidebar-splitter still
+   divides content from sidebar. */
+#browser {
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
 #browser,
 #appcontent,
-#tabbrowser-tabbox {
+#tabbrowser-tabbox,
+/* Nova draws the 1px chrome-content separator on .browserContainer too,
+   which the old list missed — it pushed the web content 1px below the AI
+   sidebar. */
+.browserContainer {
   border-top: none !important;
 }
 
@@ -430,17 +548,32 @@ sidebar-main,
   border-radius: calc(var(--uc-urlbar-rounded) * var(--uc-border-radius)) !important;
 }
 
-#urlbar-background {
-  border: transparent !important;
+/* Nova rebuilt the urlbar as <moz-urlbar> and moved its internals from
+   id to class (.urlbar-background, .urlbar-input-container). The new
+   .urlbar-input-container carries a 1px deemphasized border
+   (urlbar-searchbar.css). Reset both the legacy id and the Nova classes
+   so the field keeps blending into the toolbar across channels. */
+#urlbar-background,
+.urlbar-background,
+.urlbar-input-container {
+  border: none !important;
 }
 
 #urlbar[focused="true"] > #urlbar-background,
-#urlbar:not([open]) > #urlbar-background {
+#urlbar[focused="true"] > .urlbar-background,
+#urlbar:not([open]) > #urlbar-background,
+#urlbar:not([open]) > .urlbar-background {
   background: var(--uc-highlight-colour) !important;
 }
 
-#urlbar[open] > #urlbar-background {
+#urlbar[open] > #urlbar-background,
+#urlbar[open] > .urlbar-background {
   background: var(--toolbar-field-background-color) !important;
+  /* Nova ships the open results panel without the border/shadow that used
+     to separate it, so it blends into the page. Restore a 1px outline.
+     Higher specificity (id+class) than the global border:none reset, so it
+     only applies while the dropdown is open; the closed field stays flush. */
+  border: 1px solid var(--uc-color-surface) !important;
 }
 
 .urlbarView-row:hover > .urlbarView-row-inner {
@@ -492,6 +625,28 @@ sidebar-main,
 .urlbar-icon,
 #urlbar-go-button {
   margin: auto;
+}
+
+/* Nova's search-mode switcher (the engine icon) is a moz-button; its
+   visible button lives in the shadow DOM (part="button") and draws a violet
+   frame (#d4c1ff in dark mode) from the design tokens. Rather than fight to
+   remove it, recolour it to FoxOne's accent so it reads as an on-brand
+   search-mode indicator. Cover the host tokens (incl. the full
+   --focus-outline shorthand, missed earlier) and the exposed part, since
+   the exact channel resisted isolation. */
+.searchmode-switcher {
+  --focus-outline: 2px solid var(--uc-color-accent) !important;
+  --focus-outline-color: var(--uc-color-accent) !important;
+  --button-border: 1px solid var(--uc-color-accent) !important;
+  --button-border-color: var(--uc-color-accent) !important;
+  --button-border-color-active: var(--uc-color-accent) !important;
+  --button-border-color-hover: var(--uc-color-accent) !important;
+  --button-border-color-selected: var(--uc-color-accent) !important;
+  --border-color-selected: var(--uc-color-accent) !important;
+}
+.searchmode-switcher::part(button) {
+  border-color: var(--uc-color-accent) !important;
+  outline-color: var(--uc-color-accent) !important;
 }
 
 .urlbar-page-action {
@@ -578,10 +733,14 @@ sidebar-main,
   --sidebar-border-color: transparent !important;
 }
 
-/* splitter between content and sidebar — thin 2px line, still draggable */
+/* splitter between content and sidebar — thin 2px line, still draggable.
+   Use --toolbar-bgcolor (not the hardcoded dark base) so it blends in both
+   colour schemes: dark mode resolves it to base via FoxOne's override, light
+   mode to the system toolbar tone. Without this the dark splitter shows as a
+   black bar next to light content. */
 #sidebar-splitter {
   border: none !important;
-  background: var(--uc-color-base) !important;
+  background: var(--toolbar-bgcolor) !important;
   appearance: none !important;
   width: 2px !important;
   min-width: 2px !important;
@@ -737,7 +896,7 @@ browser[type="content"],
               margin-inline 0.2s ease, padding-inline 0.2s ease !important;
 }
 
-#nav-bar:hover #identity-permission-box,
+#urlbar:hover #identity-permission-box,
 #urlbar[focused="true"] #identity-permission-box {
   max-width: none !important;
   opacity: 1 !important;
@@ -774,14 +933,14 @@ browser[type="content"],
               padding 0.2s ease, margin 0.2s ease !important;
 }
 
-#nav-bar:hover #userContext-indicator,
+#urlbar:hover #userContext-indicator,
 #urlbar[focused="true"] #userContext-indicator {
   max-width: 200px !important;
   opacity: 1 !important;
   margin-inline: 2px !important;
 }
 
-#nav-bar:hover #userContext-label,
+#urlbar:hover #userContext-label,
 #urlbar[focused="true"] #userContext-label {
   max-width: 200px !important;
   opacity: 1 !important;
@@ -804,11 +963,11 @@ browser[type="content"],
               padding 0.2s ease, margin 0.2s ease !important;
 }
 
-#nav-bar:hover #reader-mode-button,
-#nav-bar:hover #taskbar-tabs-button,
-#nav-bar:hover #translations-button,
-#nav-bar:hover #pageAction-urlbar-_testpilot-containers,
-#nav-bar:hover #pageAction-urlbar-_e26226b8-5263-4b42-9789-504fde4443b3_,
+#urlbar:hover #reader-mode-button,
+#urlbar:hover #taskbar-tabs-button,
+#urlbar:hover #translations-button,
+#urlbar:hover #pageAction-urlbar-_testpilot-containers,
+#urlbar:hover #pageAction-urlbar-_e26226b8-5263-4b42-9789-504fde4443b3_,
 #urlbar[focused="true"] #reader-mode-button,
 #urlbar[focused="true"] #taskbar-tabs-button,
 #urlbar[focused="true"] #translations-button,
@@ -819,6 +978,23 @@ browser[type="content"],
   pointer-events: auto !important;
   padding: 6px !important;
   margin: 0 !important;
+}
+
+/* Opt-in: fully hide URL-bar clutter icons, no hover/focus reveal.
+   display:none removes them regardless of the reveal rules above, so misclicks
+   while aiming for the URL bar are impossible. The shield/security indicator
+   (Nova: #trust-icon-container; pre-Nova: #tracking-protection-icon-container)
+   and #star-button-box are otherwise always visible; this is the only thing
+   that hides them. (Issue #21) */
+@container style(--uc-hide-urlbar-buttons: 1) {
+  #trust-icon-container,
+  #tracking-protection-icon-container,
+  #reader-mode-button,
+  #taskbar-tabs-button,
+  #translations-button,
+  #star-button-box {
+    display: none !important;
+  }
 }
 
 /* Hide private browsing indicator */
@@ -835,21 +1011,34 @@ browser[type="content"],
 
 
 /* ==========================================================================
-   HAMBURGER MENU — fixed position next to Windows control buttons.
-   Only applies in one-line layout (>= 1000px). Below that, the buttons
-   fall back to their natural position in the nav-bar so they don't
-   overlap the tab strip in the two-row layout.
+   HAMBURGER MENU — fixed position next to the window control buttons.
+   Base rule uses the --uc-window-buttons-width fallback; non-macOS overrides
+   it below with CSS anchor positioning so it tracks the real box width.
    ========================================================================== */
 
-@media (min-width: 1000px) {
+#PanelUI-button {
+  position: fixed !important;
+  right: var(--uc-window-buttons-width) !important;
+  top: 0 !important;
+  height: 44px !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Non-macOS (Windows, Linux): anchor the hamburger's right edge to the left
+   edge of the real window-control box, so it auto-adapts to display scaling,
+   custom titlebar themes and per-DE control widths with no hand-set value.
+   The anchor() fallback keeps the old --uc-window-buttons-width behaviour on
+   Firefox builds without anchor positioning, so there is no regression.
+   Excluded on macOS, where the control box sits on the LEFT (traffic lights)
+   and would fling the hamburger to the wrong edge. (Issue #9) */
+@media not (-moz-platform: macos) {
+  .titlebar-buttonbox-container {
+    anchor-name: --uc-winbtns !important;
+  }
   #PanelUI-button {
-    position: fixed !important;
-    right: var(--uc-window-buttons-width) !important;
-    top: 0 !important;
-    height: 44px !important;
-    z-index: 1000 !important;
-    display: flex !important;
-    align-items: center !important;
+    right: anchor(--uc-winbtns left, var(--uc-window-buttons-width)) !important;
   }
 }
 
@@ -861,13 +1050,59 @@ browser[type="content"],
    ========================================================================== */
 
 #TabsToolbar-customization-target > toolbaritem {
-  margin-inline-start: var(--uc-drag-space) !important;
+  margin-inline: 0 !important;
+}
+/* Only the first item gets the auto start-margin, so the whole group shifts
+   right as one cluster instead of each item claiming its own slice of free
+   space (which split a second icon off toward the middle). */
+#TabsToolbar-customization-target > toolbaritem:first-of-type {
+  margin-inline-start: auto !important;
+}
+/* Only the last item clears the fixed hamburger; intermediate items stay snug. */
+#TabsToolbar-customization-target > toolbaritem:last-of-type {
+  margin-inline-end: var(--uc-hamburger-width) !important;
 }
 
-@media (min-width: 1000px) {
+/* Opt-in: hide the pinned extension icons and reveal them on hamburger hover.
+   The hamburger is position:fixed in a separate toolbar, so there is no plain
+   combinator to the icons; the reveal is driven via :root:has(). The second
+   reveal selector (an extension item's own :hover) is the bridge that keeps
+   the icons open while the pointer travels from the hamburger onto them. It
+   must target the toolbaritems specifically, not the customization-target,
+   which spans the whole tab strip and would reveal on any tab hover. (#13) */
+@container style(--uc-hide-extension-icons: 1) {
   #TabsToolbar-customization-target > toolbaritem {
-    margin-inline-start: auto !important;
-    margin-inline-end: var(--uc-hamburger-width) !important;
+    max-width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    padding-inline: 0 !important;
+    overflow: hidden !important;
+    transition: max-width 0.2s ease, opacity 0.2s ease,
+                padding-inline 0.2s ease, margin-inline 0.2s ease !important;
+  }
+  /* collapsed last item drops the hamburger clearance so no gap is reserved */
+  #TabsToolbar-customization-target > toolbaritem:last-of-type {
+    margin-inline-end: 0 !important;
+  }
+
+  /* Reveal: hovering the hamburger, or an extension item itself (the bridge). */
+  :root:has(#PanelUI-button:hover) #TabsToolbar-customization-target > toolbaritem,
+  :root:has(#TabsToolbar-customization-target > toolbaritem:hover) #TabsToolbar-customization-target > toolbaritem {
+    max-width: 60px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    padding-inline: revert !important;
+  }
+  /* Hamburger clearance on the revealed cluster's last item as PADDING, not
+     margin, so the 44px lives inside the item's own hover box. That closes the
+     dead zone between the last icon and the fixed hamburger: the toolbaritem
+     :hover bridge now spans the whole gap, so the icons stay open while the
+     pointer travels from the hamburger onto them. max-width grows by the same
+     amount so the icon is not squeezed by the padding (border-box). (#13) */
+  :root:has(#PanelUI-button:hover) #TabsToolbar-customization-target > toolbaritem:last-of-type,
+  :root:has(#TabsToolbar-customization-target > toolbaritem:hover) #TabsToolbar-customization-target > toolbaritem:last-of-type {
+    max-width: calc(60px + var(--uc-hamburger-width)) !important;
+    padding-inline-end: var(--uc-hamburger-width) !important;
   }
 }
 
@@ -1018,6 +1253,10 @@ browser[type="content"],
 /* selected tab background + configurable highlight */
 .tabbrowser-tab[selected] .tab-background {
   background-color: var(--uc-active-tab-background) !important;
+  /* Nova paints a gradient "border" on the active tab via a layered
+     background-image (--tab-border-color-accent). FoxOne marks the active
+     tab with accent text + optional underline, so kill the gradient. */
+  background-image: none !important;
   box-shadow: inset 0 calc(var(--uc-active-tab-underline) * -2px) 0 0
     var(--tab-selected-textcolor, #fabd2f) !important;
   outline: none !important;
@@ -1213,9 +1452,21 @@ tab-split-view-wrapper {
     --tab-max-width: 300px!important;
 }
 
+#tabbrowser-tabpanels {
+  &[splitview] {
+    & .browserContainer {
+      .deck-selected > & {
+        outline: 1px solid #fabd2f !important;
+      }
+    }
+  }
+}
+
 .split-view-splitter {
   border: none !important;
-  background: var(--uc-color-base) !important;
+  /* same adaptive splitter colour as #sidebar-splitter — blends in light
+     and dark instead of a hardcoded dark base */
+  background: var(--toolbar-bgcolor) !important;
   appearance: none !important;
   width: 2px !important;
   min-width: 2px !important;

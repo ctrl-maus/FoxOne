@@ -1,11 +1,11 @@
 **One-line layout. Hover-reveal icons and dynamic Tabs**
 
-<img width="1200" height="81" alt="ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/b6a233a3-6412-4c1b-96eb-646a21cae443" />
+<img width="800" height="100" alt="hover" src="https://github.com/user-attachments/assets/2fa3a838-c9f2-4118-ab46-19f3b180ec54" />
 
 **Dynamic Urlbar**
 
-<img width="1200" height="149" alt="dynamicbar-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/d6467671-3e5a-4e30-8071-dcf98ab80dd9" />
+<img width="800" height="95" alt="urlbar" src="https://github.com/user-attachments/assets/7d0ee002-6244-4815-a551-64f151b64398" />
 
 **Findbar**
 
-<img width="1200" height="160" alt="ezgif com-video-to-gif-converter(1)" src="https://github.com/user-attachments/assets/4c23c8b2-0e68-4606-916a-a31db4244885" />
+<img width="800" height="96" alt="findbar" src="https://github.com/user-attachments/assets/9032e927-0885-41fd-b202-b2795e4dfcb4" />
