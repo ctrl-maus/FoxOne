@@ -1545,13 +1545,15 @@ tab-split-view-wrapper {
     --tab-max-width: 300px!important;
 }
 
-#tabbrowser-tabpanels {
-  &[splitview] {
-    & .browserContainer {
-      .deck-selected > & {
-        outline: 1px solid #fabd2f !important;
-      }
-    }
+#tabbrowser-tabpanels[splitview] {
+  /* Outline only the pane the user is actually working in. The two visible
+     split panes carry .split-view-panel; .deck-selected sits on a THIRD,
+     non-split container (the deck tab from before the split was opened), so
+     the old `.deck-selected > .browserContainer` painted a full-width bar on
+     the wrong element whenever a split tab was in front. :focus-within tracks
+     the active pane and clears when focus leaves the split (e.g. tab switch). */
+  .split-view-panel:focus-within > .browserContainer {
+    outline: 1px solid #fabd2f !important;
   }
 }
 
