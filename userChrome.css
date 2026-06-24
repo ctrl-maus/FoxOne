@@ -1370,7 +1370,7 @@ browser[type="content"],
   min-width: 0 !important;
   min-height: 0 !important;
   line-height: 1.6 !important;
-  padding-block: 1px !important;
+  padding-block: 0px 2px !important; /* lift the label text 1px to align with the normal tab title; total block padding stays 2px so the chip box and its translateY centring are untouched */
   padding-inline: 8px !important;
   border-radius: var(--uc-border-radius) !important;
   font-weight: var(--font-weight-semibold) !important;
