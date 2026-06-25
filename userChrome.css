@@ -1145,7 +1145,13 @@ browser[type="content"],
   max-width: 30px !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 6px !important;
+  /* The vertical padding was the bug: padding-block squeezed the content to
+     12px, which FF153 rendered low (152 tolerated it). Drop only the block
+     padding so the icon centres via .urlbar-icon { margin: auto } in the full
+     24px height like the star; keep the inline padding for horizontal spacing,
+     else the icon sits cramped. */
+  padding-block: 0 !important;
+  padding-inline: 6px !important;
   margin: 0 !important;
 }
 
