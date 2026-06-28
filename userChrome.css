@@ -48,7 +48,7 @@
   --uc-tab-min-width: 76px;
 
   /* Inactive tab hover title color (issue #16) */
-  --uc-tab-hover-text: #008000;
+  --uc-tab-hover-text: #ffda85;
 
   /* Context menu: "Open Link in Split View" (none = hidden, -moz-box = visible) */
   --uc-show-context-splitview: none;
@@ -1304,7 +1304,10 @@ browser[type="content"],
   display: none !important;
 }
 .tabbrowser-tab:not([pinned]):hover .tab-close-button {
-  display: -moz-inline-block !important;
+  /* revert (not -moz-inline-block: a removed alias that parses as invalid and
+     gets dropped, leaving the base display:none). revert restores the native
+     close-button display so it reappears on hover. */
+  display: revert !important;
 }
 
 /* adaptive tab width */
