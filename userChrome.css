@@ -595,6 +595,17 @@ sidebar-main,
   border-radius: 0 !important;
 }
 
+/* Match the URL-bar text size to the tab-strip labels (12px). Native Nova
+   renders #urlbar-input at 13.8px — ~15% larger than the 12px tab labels —
+   so the two read as different heights on the shared toolbar row. Both boxes
+   already centre on the row (centerY 22), and line-height only adds symmetric
+   leading, so equal font-size keeps their baselines on the same line. 13px is
+   a deliberate step up from the 12px labels: the URL reads slightly more
+   prominent while the baselines stay aligned (sub-pixel offset, invisible). */
+#urlbar-input {
+  font-size: 13px !important;
+}
+
 /* Nova rebuilt the urlbar as <moz-urlbar> and moved its internals from
    id to class (.urlbar-background, .urlbar-input-container). The new
    .urlbar-input-container carries a 1px deemphasized border
