@@ -23,8 +23,10 @@
   /* Global Border Radius — applied to all UI elements */
   --uc-border-radius: 8px;
 
-  /* Statuspanel distance from window border (0 = corner) */
-  --uc-status-panel-spacing: 12px;
+  /* Statuspanel distance from window border (0 = corner). Set to match the
+     floating findbar's --findbar-top / --findbar-right (8px): both are CSS px,
+     so they render at the same real inset under any display scaling. */
+  --uc-status-panel-spacing: 8px;
 
   /* URL Bar width (min applied normally, max on focus). The px ceiling caps
      growth on ultrawide/4K, where bare vw scales to absurd widths (issue #6).
