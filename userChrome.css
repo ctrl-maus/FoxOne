@@ -702,6 +702,25 @@ sidebar-main,
   padding: 0 inherit !important;
 }
 
+/* Bookmark star alignment: the star renders lower than the sibling urlbar
+   icons. #star-button (the image) already carries margin:auto from the rule
+   above, so the offset is one of two things — the #star-button-box container
+   sitting low in the input row, or the image not centring inside its box.
+   Cover both at the root: align-self centres the box in the (flex) input
+   container, align-items centres the image inside the box. No pixel nudge,
+   so nothing for a Nova token-rename to break. */
+#star-button-box {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* The native 6px block padding on a border-box 27.2px box leaves a 15.2px
+     content area — smaller than the 16px star icon. The overflowing icon
+     rounds downward when centred, so the star renders 1px low. The sibling
+     page-action icons carry 0 block padding and centre cleanly; match them.
+     Inline padding stays untouched for horizontal spacing. */
+  padding-block: 0 !important;
+}
+
 
 /* ==========================================================================
    ICON COLOURING – hover/active feedback by fill, not by background.
