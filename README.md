@@ -49,7 +49,7 @@ Floating Find Bar. Adapted from [LittleFox](https://github.com/biglavis/LittleFo
 ![findbar](assets/findbar.gif)
 
 
-#### Customisation
+### Customisation
 
 > Running classic (pre-Nova) Firefox?
 > From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the 2.3 release.
