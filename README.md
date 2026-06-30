@@ -6,25 +6,24 @@
 > 
 ![urlbar](assets/preview_cropped.png)
 
-<br>
-<br>
 
 > **Running classic (pre-Nova) Firefox?**
 > 
 > From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the 2.3 release.
 
 
+
 ### Features
 
-Dynamic URL bar with hover-reveal Icons
-
+>Dynamic URL bar with hover-reveal Icons
+>
 ![urlbar](assets/dynamic_url.gif)
 
 <br>
 
 
-Dynamic tabs and two addons pinned by the hamburger, revealed on hover.
-
+>Dynamic tabs and two addons pinned by the hamburger, revealed on hover.
+>
 ![toolbar](assets/dynamic_toolbar.gif)
 
 
@@ -32,8 +31,8 @@ Dynamic tabs and two addons pinned by the hamburger, revealed on hover.
 
 
 
-Floating Find Bar. Adapted from [LittleFox](https://github.com/biglavis/LittleFox)
-
+>Floating Find Bar. Adapted from [LittleFox](https://github.com/biglavis/LittleFox)
+>
 ![findbar](assets/findbar.gif)
 
 
