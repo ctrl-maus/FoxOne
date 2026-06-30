@@ -3,7 +3,7 @@
 **A minimalistic one-line Firefox theme**
 > Ready for **Nova**. Tested and stable on Firefox 152+ with `browser.nova.enabled`
 > 
-![Preview](assets/Preview.png)
+<img width="1438" height="340" alt="neuer screen smol 30 jun" src="https://github.com/user-attachments/assets/e5b7b495-43fe-4985-8c96-90008281f68e" />
 
 
 <br>
