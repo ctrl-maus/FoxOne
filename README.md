@@ -1,8 +1,8 @@
 # FoxOne
 
 **A minimalistic one-line Firefox theme**
-> Ready for **Nova**. Tested and stable on Firefox 152+ with `browser.nova.enabled`
->
+> Ready for **Nova**. Tested and stable on Firefox 152+ with `browser.nova.enabled`\
+> Tested on Windows, macOS, and Linux (GNOME & KDE).
 > 
 ![urlbar](assets/preview_cropped.png)
 
