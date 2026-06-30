@@ -56,7 +56,7 @@ Floating Find Bar. Adapted from [LittleFox](https://github.com/biglavis/LittleFo
 > From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the 2.3 release.
 
 > If you use a different system theme or want light mode, the color theme section in userChrome.css only applies inside @media (prefers-color-scheme: dark) and won't interfere.
-[See all options →](docs/customisation.md)
+See all options → [docs/customisation.md](docs/customisation.md)
 
 ---
  
