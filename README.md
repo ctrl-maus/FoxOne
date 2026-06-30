@@ -22,12 +22,16 @@ Dynamic tabs and two addons pinned by the hamburger, revealed on hover.
 ![toolbar](assets/dynamic_toolbar.gif)
 
 
+<br>
+
+<br>
 
 
-*...and it has a [Floating Find Bar](assets/findbar.gif)*
+Floating Find Bar. Adapted from [LittleFox](https://github.com/biglavis/LittleFox)
 
+![findbar](assets/findbar.gif)
 
 ---
  
 **[Installation](docs/installation.md) and [Customisation](https://github.com/Firnschnee/FoxOne/blob/main/docs/customisation.md)** |
-Inspired by [Cascade](https://github.com/andreasgrafen/cascade) & [LittleFox](https://github.com/biglavis/LittleFox) | It works with Adaptive Tab Bar Colour! | License: [MIT](LICENSE) 
+Inspired by [Cascade](https://github.com/andreasgrafen/cascade) & [LittleFox](https://github.com/biglavis/LittleFox) | It works with [Adaptive Tab Bar Colour!](https://addons.mozilla.org/de/firefox/addon/adaptive-tab-bar-colour/) | License: [MIT](LICENSE) 
