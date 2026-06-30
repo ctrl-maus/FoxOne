@@ -5,25 +5,16 @@
 > 
 <img width="1438" height="340" alt="neuer screen smol 30 jun" src="https://github.com/user-attachments/assets/e5b7b495-43fe-4985-8c96-90008281f68e" />
 
-
 <br>
 
-### Installation
->
->1. Download [`userChrome.css`](https://github.com/Firnschnee/FoxOne/blob/main/userChrome.css) and [`userContent.css`](https://github.com/Firnschnee/FoxOne/blob/main/userContent.css)
->
->2. Go to **`about:config`** in FireFox. Search for **`toolkit.legacyUserProfileCustomizations.stylesheets`** and set it to **`true`**.
->
->3. Find your profile folder: In Firefox, go to `about:support` and click **Open Profile Folder**.
->
->4. Create a `chrome` folder inside your profile folder if it doesn't exist, then copy these files into it:
->
->- [`userChrome.css`](https://github.com/Firnschnee/FoxOne/blob/main/userChrome.css) - browser UI styling
->- [`userContent.css`](https://github.com/Firnschnee/FoxOne/blob/main/userContent.css) - new tab / home page colors
->
->5. Restart Firefox - The theme applies on restart.
->   
->6. FoxOne includes a built-in Gruvbox inspired Dark color theme that activates automatically in dark mode. No separate extension needed.
+### Customisation
+FoxOne is fully configurable through CSS variables.  
+> Running classic (pre-Nova) Firefox?
+> From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the 2.3 release.
+
+> If you use a different system theme or want light mode, the color theme section in userChrome.css only applies inside @media (prefers-color-scheme: dark) and won't interfere.
+See all options → [docs/customisation.md](docs/customisation.md)
+
 
 
 ### Features
@@ -51,12 +42,24 @@ Floating Find Bar. Adapted from [LittleFox](https://github.com/biglavis/LittleFo
 
 <br>
 
-**Customisation.** FoxOne is fully configurable through CSS variables.  
-> Running classic (pre-Nova) Firefox?
-> From release 3.0 onward, FoxOne targets the Nova UI. The stylesheet is dual-written (Proton & Nova) and should still work, but it is no longer tested. For a known-good classic build, use the 2.3 release.
+### Installation
+>
+>1. Download [`userChrome.css`](https://github.com/Firnschnee/FoxOne/blob/main/userChrome.css) and [`userContent.css`](https://github.com/Firnschnee/FoxOne/blob/main/userContent.css)
+>
+>2. Go to **`about:config`** in FireFox. Search for **`toolkit.legacyUserProfileCustomizations.stylesheets`** and set it to **`true`**.
+>
+>3. Find your profile folder: In Firefox, go to `about:support` and click **Open Profile Folder**.
+>
+>4. Create a `chrome` folder inside your profile folder if it doesn't exist, then copy these files into it:
+>
+>- [`userChrome.css`](https://github.com/Firnschnee/FoxOne/blob/main/userChrome.css) - browser UI styling
+>- [`userContent.css`](https://github.com/Firnschnee/FoxOne/blob/main/userContent.css) - new tab / home page colors
+>
+>5. Restart Firefox - The theme applies on restart.
+>   
+>6. FoxOne includes a built-in Gruvbox inspired Dark color theme that activates automatically in dark mode. No separate extension needed.
 
-> If you use a different system theme or want light mode, the color theme section in userChrome.css only applies inside @media (prefers-color-scheme: dark) and won't interfere.
-See all options → [docs/customisation.md](docs/customisation.md)
+<br>
 
 ---
  
