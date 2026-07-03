@@ -1365,8 +1365,13 @@ browser[type="content"],
      overflows instead), and 16px reads too large. transform: scale shrinks
      the rendered X around its centre without touching the layout box, so the
      24x24 click target and the centerY-22 alignment are preserved. Tune the
-     factor for size: 0.75 ≈ 12px. */
-  transform: scale(0.75) !important;
+     factor for size: 0.75 ≈ 12px.
+     Nova shifted the tab-label line down ~1px, leaving the X reading 1px high
+     against the label. translateY nudges the rendered icon back onto the line.
+     Order matters: translateY is the LEFTMOST transform so it applies in
+     screen space at a full 1px — placed after scale it would be scaled to
+     0.75px. Pure visual shift; the 24x24 layout/click box is untouched. */
+  transform: translateY(1px) scale(0.75) !important;
 }
 
 /* adaptive tab width */
