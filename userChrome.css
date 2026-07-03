@@ -202,10 +202,17 @@
     --toolbar-background-color: var(--uc-color-base) !important;
     --toolbox-background-color: var(--uc-color-base) !important;
 
-    /* URL bar */
+    /* URL bar. Nova renamed the field text tokens (--toolbar-field-color →
+       --toolbar-field-text-color, and --toolbar-field-focus-color →
+       --toolbar-field-text-color-focus, word order flipped). FoxOne's old
+       overrides miss the new names, so the field text drifted to Nova's
+       lilac default (#e7e1f8). Pin the renamed tokens to the palette text
+       colour too (issue: URL-bar text tint under browser.nova.enabled). */
     --toolbar-field-background-color: var(--uc-color-base) !important;
     --toolbar-field-color: var(--uc-color-text) !important;
+    --toolbar-field-text-color: var(--uc-color-text) !important;
     --toolbar-field-focus-color: var(--uc-color-text) !important;
+    --toolbar-field-text-color-focus: var(--uc-color-text) !important;
     --toolbar-field-focus-background-color: var(--uc-color-surface) !important;
 
     /* Popups & panels */
