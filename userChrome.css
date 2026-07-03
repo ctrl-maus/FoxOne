@@ -648,6 +648,17 @@ sidebar-main,
   border: 1px solid var(--uc-color-surface) !important;
 }
 
+/* Nova extends the breakout by dropping .urlbar-background below the toolbar
+   row (bottom: -8px), so in the one-line layout the field overhangs into the
+   page content. Pull it to -6px so the breakout's lower edge sits flush with
+   the row. Unconditional is safe: bottom only acts while the field is in
+   breakout (absolute-positioned); at rest there's no breakout box for it to
+   move. Fixes the overhang half of issue #31 (Nova megabar). The remaining
+   two-Esc collapse is Nova state logic, not geometry. */
+.urlbar-background {
+  bottom: -6px !important;
+}
+
 .urlbarView-row:hover > .urlbarView-row-inner {
   background: var(--toolbar-field-focus-background-color) !important;
 }
