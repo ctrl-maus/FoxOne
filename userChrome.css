@@ -369,6 +369,19 @@ sidebar-main,
   margin-top: 2px !important;
 }
 
+/* In the breakout state Nova nudges the trust icon ~1px up and ~1px toward
+   the inline-start, so the fixed 2px vertical nudge above stops aligning it
+   and the icon also drifts left (issue #31). breakout-extend is set for
+   exactly as long as the shift lasts — from Ctrl+L / click until a second
+   Esc collapses the field, the post-first-Esc residue included — so scoping
+   both corrections to it cancels Nova's shift on each axis without touching
+   the resting position. Higher specificity (2 ids + attr) beats the base
+   nudge; at rest the selector doesn't match and the resting values stand. */
+#urlbar[breakout-extend] #trust-icon {
+  margin-top: 3px !important;
+  margin-inline-start: 1px !important;
+}
+
 /* The EME / DRM-content indicator (#eme-notification-icon, in
    #notification-popup-box) pops up next to the shield during DRM playback and
    hits the same Nova quirk: it renders ~2px too high relative to the other
