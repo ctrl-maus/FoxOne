@@ -683,6 +683,16 @@ sidebar-main,
   bottom: -6px !important;
 }
 
+/* Touch density (browser.uidensity = 1) makes the toolbar row taller, so the
+   -6px above no longer lands flush: ~1px of the breakout box stays visible
+   after the first Esc (issue #31, reopened). Firefox flags this state with
+   uidensity="touch" on the root, so scope a 1px-tighter pull to it. Raising
+   the bottom edge toward 0 (less negative) reduces the overhang; the base
+   rule stays untouched for normal/compact density. */
+:root[uidensity="touch"] .urlbar-background {
+  bottom: -5px !important;
+}
+
 .urlbarView-row:hover > .urlbarView-row-inner {
   background: var(--toolbar-field-focus-background-color) !important;
 }
