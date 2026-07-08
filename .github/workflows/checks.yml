@@ -1,0 +1,40 @@
+# FoxOne CI: consistency checks (scripts/check.mjs) + stylelint.
+# Path-filtered: README-only changes don't trigger a run since nothing in
+# the README is checked. docs/ IS included because check.mjs diffs the
+# customisation.md defaults table against the CSS. The release trigger
+# exists for the version check: the git tag must match the file headers.
+name: checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "userChrome.css"
+      - "userContent.css"
+      - "docs/**"
+      - "scripts/**"
+      - ".stylelintrc.json"
+      - ".github/workflows/checks.yml"
+  pull_request:
+    paths:
+      - "userChrome.css"
+      - "userContent.css"
+      - "docs/**"
+      - "scripts/**"
+      - ".stylelintrc.json"
+      - ".github/workflows/checks.yml"
+  release:
+    types: [published]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Consistency checks (vars, doc drift, version stamp)
+        run: node scripts/check.mjs
+      - name: stylelint
+        run: npx --yes stylelint@16 "*.css"
