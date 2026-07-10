@@ -10,8 +10,8 @@ All configuration lives in the `:root` block at the top of `userChrome.css`.
 
 | Variable | Default | Description |
 |---|---|---|
-| `--uc-color-base` | `#282828` | Main background (toolbar, frame) |
-| `--uc-color-surface` | `#3c3836` | Elevated surfaces (panels, popups) |
+| `--uc-color-base` | `#282828` | Main background (toolbar, frame, panels, context menus) |
+| `--uc-color-surface` | `#3c3836` | Secondary tone (borders, separators, focused URL field) |
 | `--uc-color-accent` | `#fabd2f` | Accent color (active tab, focus ring) |
 | `--uc-color-text` | `#FFFFFF` | Primary text |
 | `--uc-color-hover` | `#7c6f64` | Hover / highlight backgrounds |

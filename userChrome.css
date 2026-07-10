@@ -15,7 +15,7 @@
 :root {
   /* Color palette — change these five values to retheme FoxOne */
   --uc-color-base:    #282828;   /* main background (toolbar, frame) */
-  --uc-color-surface: #3c3836;   /* elevated surfaces (panels, popups) */
+  --uc-color-surface: #3c3836;   /* secondary tone (borders, separators, focused URL field) */
   --uc-color-accent:  #fabd2f;   /* accent color (active tab, focus ring) */
   --uc-color-text:    #FFFFFF;   /* primary text */
   --uc-color-hover:   #7c6f64;   /* hover / highlight backgrounds */
@@ -223,10 +223,13 @@
     --toolbar-field-text-color-focus: var(--uc-color-text) !important;
     --toolbar-field-focus-background-color: var(--uc-color-surface) !important;
 
-    /* Popups & panels */
-    --arrowpanel-background: var(--uc-color-surface) !important;
+    /* Popups & panels — legacy token names, pre-Nova builds only. Nova
+       retired the --arrowpanel-* family; its replacements are set per-popup
+       below (see POPUP SURFACES). Values match that block: base background
+       so panels and context menus read as one surface. */
+    --arrowpanel-background: var(--uc-color-base) !important;
     --arrowpanel-color: var(--uc-color-text) !important;
-    --arrowpanel-border-color: var(--uc-color-base) !important;
+    --arrowpanel-border-color: var(--uc-color-surface) !important;
     --panel-item-hover-bgcolor: var(--uc-color-hover) !important;
 
     /* Sidebar */
@@ -234,6 +237,38 @@
     --lwt-sidebar-text-color: var(--uc-color-text) !important;
     --lwt-sidebar-border-color: var(--uc-color-surface) !important;
     --sidebar-highlight-background-color: var(--uc-color-hover) !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     POPUP SURFACES — one family for arrow panels AND context menus.
+
+     Nova removed the --arrowpanel-* tokens; panels and menupopups now share
+     --panel-background-color / --panel-text-color / --panel-border-color
+     (toolkit popup.css paints ::part(content) from them). Untouched they
+     diverge: arrow panels (hamburger, extensions panel, shield/permissions
+     popup) resolve the design-token default rgb(66,65,77), context menus the
+     darker Menu system colour. Pin both to the palette so every popup reads
+     as the same surface: base background, surface border/separators, hover
+     via --uc-color-hover (panel rows consume the button hover tokens).
+     #DateTimePickerPanel is excluded — it themes itself to the content
+     colour scheme, and forcing chrome colours breaks a light-mode picker.
+     ---------------------------------------------------------------------- */
+  :root:not([lwtheme]) :is(panel, menupopup):not(#DateTimePickerPanel) {
+    --panel-background-color: var(--uc-color-base) !important;
+    --panel-text-color: var(--uc-color-text) !important;
+    --panel-border-color: var(--uc-color-surface) !important;
+    --panel-separator-color: var(--uc-color-surface) !important;
+    --button-background-color-hover: var(--uc-color-hover) !important;
+    --button-background-color-ghost-hover: var(--uc-color-hover) !important;
+  }
+
+  /* Context-menu item hover. Toolkit paints it with the -moz-menuhover
+     system colour from a :where() rule (zero specificity, deliberately
+     overridable); match the panel hover so both popup types highlight
+     identically. */
+  :root:not([lwtheme]) menupopup :is(menuitem, menu)[_moz-menuactive]:not([disabled]) {
+    background-color: var(--uc-color-hover) !important;
+    color: var(--uc-color-text) !important;
   }
 
   /* Accent & identity – always applied, including under a dynamic theme, so
