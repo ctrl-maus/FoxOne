@@ -260,6 +260,11 @@
     --panel-separator-color: var(--uc-color-surface) !important;
     --button-background-color-hover: var(--uc-color-hover) !important;
     --button-background-color-ghost-hover: var(--uc-color-hover) !important;
+    /* toolkit popup.css defaults --panel-border-radius to 6px (arrow panels:
+       hamburger, extensions, permissions popups); context menus already sit
+       at 0 via their own :not([type="arrow"]) branch. Pin both to square so
+       every popup matches the findbar / context-menu / breakout-urlbar look. */
+    --panel-border-radius: 0 !important;
   }
 
   /* Context-menu item hover. Toolkit paints it with the -moz-menuhover
