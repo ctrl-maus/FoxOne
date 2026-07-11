@@ -249,7 +249,7 @@
      popup) resolve the design-token default rgb(66,65,77), context menus the
      darker Menu system colour. Pin both to the palette so every popup reads
      as the same surface: base background, surface border/separators, hover
-     via --uc-color-hover (panel rows consume the button hover tokens).
+     as accent text without a background block (see the button tokens below).
      #DateTimePickerPanel is excluded — it themes itself to the content
      colour scheme, and forcing chrome colours breaks a light-mode picker.
      ---------------------------------------------------------------------- */
@@ -258,8 +258,20 @@
     --panel-text-color: var(--uc-color-text) !important;
     --panel-border-color: var(--uc-color-surface) !important;
     --panel-separator-color: var(--uc-color-surface) !important;
-    --button-background-color-hover: var(--uc-color-hover) !important;
-    --button-background-color-ghost-hover: var(--uc-color-hover) !important;
+    /* Row hover marks with accent text instead of a background block, the
+       same cue FoxOne uses for toolbar icons and tab titles (issue #16).
+       Panel rows (subviewbuttons) consume the ghost button tokens, a few
+       app-menu widgets (zoom, fullscreen) the plain ones; override text AND
+       background for both, plus the :active pair so a click doesn't flash
+       the native grey back in. */
+    --button-background-color-hover: transparent !important;
+    --button-background-color-ghost-hover: transparent !important;
+    --button-background-color-active: transparent !important;
+    --button-background-color-ghost-active: transparent !important;
+    --button-text-color-hover: var(--uc-color-accent) !important;
+    --button-text-color-ghost-hover: var(--uc-color-accent) !important;
+    --button-text-color-active: var(--uc-color-accent) !important;
+    --button-text-color-ghost-active: var(--uc-color-accent) !important;
     /* toolkit popup.css defaults --panel-border-radius to 6px (arrow panels:
        hamburger, extensions, permissions popups); context menus already sit
        at 0 via their own :not([type="arrow"]) branch. Pin both to square so
@@ -278,10 +290,10 @@
   /* Context-menu item hover. Toolkit paints it with the -moz-menuhover
      system colour from a :where() rule (zero specificity, deliberately
      overridable); match the panel hover so both popup types highlight
-     identically. */
+     identically: accent text, no background block. */
   :root:not([lwtheme]) menupopup :is(menuitem, menu)[_moz-menuactive]:not([disabled]) {
-    background-color: var(--uc-color-hover) !important;
-    color: var(--uc-color-text) !important;
+    background-color: transparent !important;
+    color: var(--uc-color-accent) !important;
   }
 
   /* Accent & identity – always applied, including under a dynamic theme, so
