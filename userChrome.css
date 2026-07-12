@@ -1,6 +1,6 @@
 /*==============================================================================================*
 
-  FoxOne 3.3.4 – A minimalistic one-line Firefox theme
+  FoxOne 3.3.5 – A minimalistic one-line Firefox theme
   Based on Cascade (https://github.com/andreasgrafen/cascade)
   Floating Find Bar by LittleFox (https://github.com/biglavis/LittleFox)
   MIT License
@@ -237,6 +237,12 @@
     --lwt-sidebar-text-color: var(--uc-color-text) !important;
     --lwt-sidebar-border-color: var(--uc-color-surface) !important;
     --sidebar-highlight-background-color: var(--uc-color-hover) !important;
+
+    /* Content container behind the page. Painting it base kills the white
+       flash Firefox shows while a page loads or during navigation. Chrome
+       surface only — does not touch website content (about:newtab keeps its
+       own opaque canvas). */
+    --tabpanel-background-color: var(--uc-color-base) !important;
   }
 
   /* ----------------------------------------------------------------------
@@ -1879,10 +1885,14 @@ split-view-footer {
 /* ==========================================================================
    TASKBAR TABS — "Pin to taskbar" PWA-like windows.
    These use html[id^="taskbartab"] instead of #main-window.
-   Hide the navbar entirely for a clean app-like experience.
+   Strip the address bar, menu button and extensions button for a
+   clean app-like feel. Firefox stays reachable via the tab context
+   menu and keyboard shortcuts.
    ========================================================================== */
 
-html[id^="taskbartab"] #urlbar-container {
+html[id^="taskbartab"] #urlbar-container,
+html[id^="taskbartab"] #PanelUI-button,
+html[id^="taskbartab"] #unified-extensions-button {
   display: none !important;
 }
 
