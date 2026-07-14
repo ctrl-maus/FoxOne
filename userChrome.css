@@ -1052,6 +1052,23 @@ sidebar-main,
   --toolbarbutton-icon-fill: var(--tab-selected-textcolor, #fabd2f) !important;
 }
 
+/* Bookmarks-bar overflow chevron (">>"): lives in #PersonalToolbar, so the
+   #nav-bar rules miss it. Same background clear as the buttons above, but
+   the fill is accent by DEFAULT (Max's call: the chevron is a permanent
+   overflow indicator, not an interaction target, so it wears the accent
+   outright, dimmed toward base at rest); hover lifts it to full accent. */
+#PlacesChevron {
+  --toolbarbutton-hover-background: transparent !important;
+  --toolbarbutton-active-background: transparent !important;
+  --toolbarbutton-icon-fill: color-mix(in srgb, var(--uc-color-accent) 65%, var(--uc-color-base)) !important;
+}
+#PlacesChevron:is(:hover, :active, [open]) > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+  background-color: transparent !important;
+}
+#PlacesChevron:hover {
+  --toolbarbutton-icon-fill: var(--uc-color-accent) !important;
+}
+
 /* urlbar action icons: shield, site-settings, page actions, reader,
    translations. They paint via fill directly; the bookmark star is excluded
    so its native state colour survives, and the icon background is dropped so
