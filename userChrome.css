@@ -2040,6 +2040,200 @@ html[id^="taskbartab"] #unified-extensions-button {
 
 
 /* ==========================================================================
+   LIBRARY ("Bibliothek", places.xhtml) — selection follows the FoxOne
+   model: accent text instead of a background block (same as tabs, icons,
+   urlbar results, add-ons list). Hover gets an accent frame, square
+   corners like the urlbar rows.
+
+   Both panes (folder tree left, item list right) are XUL <tree>s and are
+   only styleable through ::-moz-tree-* pseudo-elements. Those CANNOT read
+   CSS variables — the palette values are hardcoded here on purpose:
+   #fabd2f = --uc-color-accent. Retheming means touching this block too.
+   Dark-scheme gated like the COLOR THEME block: amber text without a
+   highlight needs the dark surface.
+
+   Known gap: the Downloads category inside the Library is a richlistbox,
+   not a tree — untouched for now.
+   ========================================================================== */
+
+@-moz-document url("chrome://browser/content/places/places.xhtml") {
+  @media (prefers-color-scheme: dark) {
+
+    /* Selected row — amber text, no highlight block. The unfocused
+       variant (native: grey) gets the same treatment, so the pane that
+       doesn't hold focus still shows where you are. */
+    treechildren::-moz-tree-row(selected),
+    treechildren::-moz-tree-row(selected, focus) {
+      background-color: transparent !important;
+      border: none !important;
+    }
+    treechildren::-moz-tree-cell-text(selected),
+    treechildren::-moz-tree-cell-text(selected, focus) {
+      color: #fabd2f !important;
+    }
+    /* Folder/page icons and twisties are context-fill — follow the text. */
+    treechildren::-moz-tree-image(selected),
+    treechildren::-moz-tree-image(selected, focus),
+    treechildren::-moz-tree-twisty(selected),
+    treechildren::-moz-tree-twisty(selected, focus) {
+      fill: #fabd2f !important;
+    }
+
+    /* Keyboard-cursor dashed ring: redundant next to the amber text
+       (arrow keys move the selection along anyway) — off. Sits BEFORE the
+       hover rule so hovering a current row still shows the frame. */
+    treechildren::-moz-tree-row(current),
+    treechildren::-moz-tree-row(current, focus) {
+      border: none !important;
+      /* the dashed ring is an outline, not a border (toolkit tree.css) */
+      outline: none !important;
+    }
+
+    /* Hover — accent frame, no fill. */
+    treechildren::-moz-tree-row(hover) {
+      background-color: transparent !important;
+      border: 1px solid #fabd2f !important;
+    }
+
+    /* ------------------------------------------------------------------
+       Surfaces — one tone for the whole window, like the main chrome.
+       Native it is a two-tone mix (#2b2a33 toolbar/list, #1c1b22 sidebar/
+       details pane); FoxOne paints everything base. Regular XUL from here
+       on, so the tokens work again.
+       ------------------------------------------------------------------ */
+    :root,
+    #placesToolbox,
+    #placesToolbar,
+    #placesView,
+    #detailsPane,
+    tree {
+      background-color: var(--uc-color-base) !important;
+    }
+
+    /* Pane splitter — hairline in the separator tone. */
+    #placesSplitter {
+      appearance: none !important;
+      border: none !important;
+      background-color: var(--uc-color-surface) !important;
+      min-width: 1px !important;
+      width: 1px !important;
+    }
+
+    /* Column headers — flat on base, separator hairlines, sortable via
+       click so they get the accent-text hover like every other control. */
+    treecol,
+    .tree-columnpicker-button {
+      appearance: none !important;
+      background-color: var(--uc-color-base) !important;
+      color: var(--uc-color-text) !important;
+      border-inline-end: 1px solid var(--uc-color-surface) !important;
+      border-bottom: 1px solid var(--uc-color-surface) !important;
+    }
+    treecol:hover,
+    .tree-columnpicker-button:hover {
+      color: var(--uc-color-accent) !important;
+    }
+
+    /* ------------------------------------------------------------------
+       Toolbar buttons — no hover block, accent text instead. Verwalten /
+       Ansichten / Importieren und Sichern are <menu> elements dressed as
+       buttons (#placesMenu), only back/forward are real toolbarbuttons —
+       both need covering. Icons and dropmarkers are context-fill and
+       follow via currentColor.
+       ------------------------------------------------------------------ */
+    #placesToolbar toolbarbutton,
+    #placesMenu > menu {
+      appearance: none !important;
+      background: transparent !important;
+      color: var(--uc-color-text) !important;
+    }
+    #placesToolbar toolbarbutton:not([disabled]):hover,
+    #placesMenu > menu:hover,
+    #placesMenu > menu[_moz-menuactive],
+    #placesMenu > menu[open] {
+      background: transparent !important;
+      color: var(--uc-color-accent) !important;
+    }
+
+    /* ------------------------------------------------------------------
+       Text fields (search box, details-pane inputs) — urlbar model:
+       base at rest, surface plus accent border on focus.
+       ------------------------------------------------------------------ */
+    #searchFilter,
+    #detailsPane input {
+      appearance: none !important;
+      background-color: var(--uc-color-base) !important;
+      color: var(--uc-color-text) !important;
+      border: 1px solid var(--uc-color-surface) !important;
+      border-radius: var(--uc-border-radius) !important;
+    }
+    /* The search pill ignores the id selector — its input sits behind a
+       shadow boundary, which descendant selectors can't cross. User
+       sheets apply INSIDE chrome shadow trees though (same mechanism the
+       about:-page theming rides on), so bare element selectors reach it.
+       Blast radius is fine: every input in this window is the search box
+       or a details-pane field, and both get the same treatment. */
+    input {
+      background-color: var(--uc-color-base) !important;
+      color: var(--uc-color-text) !important;
+    }
+    input:focus {
+      background-color: var(--uc-color-surface) !important;
+    }
+    #searchFilter[focused],
+    #detailsPane input:focus {
+      background-color: var(--uc-color-surface) !important;
+      border-color: var(--uc-color-accent) !important;
+    }
+
+    /* Native focus ring — drawn straight in the Windows accent colour
+       (system cyan), past every token. Replace, don't tint: outline-style
+       auto is platform-rendered and unreliable to recolour. */
+    input:focus-visible {
+      outline: 2px solid var(--uc-color-accent) !important;
+    }
+
+    /* ------------------------------------------------------------------
+       Tag selector (the checkbox list behind the Schlagwörter expander).
+       Selection follows the tree model: amber text, no block. The native
+       checkboxes render in the Windows accent colour — redrawn flat:
+       base/surface at rest, filled amber with a dark check when set.
+       ------------------------------------------------------------------ */
+    #editBMPanel_tagsSelector {
+      background-color: var(--uc-color-base) !important;
+      border: 1px solid var(--uc-color-surface) !important;
+    }
+    #editBMPanel_tagsSelector richlistitem[selected] {
+      background-color: transparent !important;
+      color: var(--uc-color-accent) !important;
+      outline: none !important;
+    }
+    #editBMPanel_tagsSelector richlistitem[selected] checkbox {
+      color: inherit !important;
+    }
+    #editBMPanel_tagsSelector .checkbox-check {
+      appearance: none !important;
+      width: 16px !important;
+      height: 16px !important;
+      border: 1px solid var(--uc-color-hover) !important;
+      border-radius: 3px !important;
+      background-color: var(--uc-color-base) !important;
+    }
+    #editBMPanel_tagsSelector checkbox[checked] .checkbox-check {
+      background-color: var(--uc-color-accent) !important;
+      border-color: var(--uc-color-accent) !important;
+      background-image: url("chrome://global/skin/icons/check.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px;
+      -moz-context-properties: fill;
+      fill: #282828; /* base — dark check on amber */
+    }
+  }
+}
+
+
+/* ==========================================================================
    REDUCED MOTION - honour the OS "reduce motion" preference.
    Overrides FoxOne's OWN decorative transitions/animations only; Firefox's
    native chrome animations are left untouched. Placed at end-of-file on
