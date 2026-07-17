@@ -1240,6 +1240,12 @@ sidebar-main,
   width: 2px !important;
   min-width: 2px !important;
   max-width: 2px !important;
+  /* Nova seats the splitter inside the 4px chrome-window gap via negative
+     inline margins (calc(-1 * gap + 1px)) and lifts it off the bottom edge
+     (margin-block-end). FoxOne runs gap 0, so those margins shoved the
+     splitter 1px into the content and let a 1px strip of page shine through
+     next to the sidebar. Zero them: flush 2px line, full height. */
+  margin: 0 !important;
 }
 
 /* sidebar panel header (the "Anthropic Claude" bar) — hide entirely */
@@ -1341,6 +1347,37 @@ sidebar-main {
   sidebar-bookmark-row[selected] {
     background-color: transparent !important;
     color: #fabd2f !important;
+  }
+}
+
+/* The BOOKMARKS sidebar is still the old places document (XUL tree), not a
+   revamped Lit panel like history/synced tabs — the sidebar/ block above
+   never reaches it. Its search box is a modern moz-input-search though, so
+   the same shadow-piercing input rule works; the selection is a XUL tree
+   like the Library: FoxOne model via ::-moz-tree pseudos, hardcoded
+   #fabd2f = --uc-color-accent (tree pseudos cannot read variables),
+   dark-gated for the same reason as the Library block. */
+@-moz-document url("chrome://browser/content/places/bookmarksSidebar.xhtml") {
+  input[type="search"] {
+    background-color: #1f1f1f !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    treechildren::-moz-tree-row(selected),
+    treechildren::-moz-tree-row(selected, focus) {
+      background-color: transparent !important;
+      border: none !important;
+    }
+    treechildren::-moz-tree-cell-text(selected),
+    treechildren::-moz-tree-cell-text(selected, focus) {
+      color: #fabd2f !important;
+    }
+    treechildren::-moz-tree-image(selected),
+    treechildren::-moz-tree-image(selected, focus),
+    treechildren::-moz-tree-twisty(selected),
+    treechildren::-moz-tree-twisty(selected, focus) {
+      fill: #fabd2f !important;
+    }
   }
 }
 
