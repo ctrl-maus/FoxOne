@@ -820,11 +820,14 @@ sidebar-main,
 #browser,
 #appcontent,
 #tabbrowser-tabbox,
-/* Nova draws the 1px chrome-content separator on .browserContainer too,
-   which the old list missed — it pushed the web content 1px below the AI
-   sidebar. */
+/* Nova frames .browserContainer with a FULL 1px border (all four edges),
+   not just a top separator: border-top pushed the content 1px below the
+   AI sidebar, and the remaining transparent edges are 1px windows onto
+   the chrome background, visible as a faint light line against dark
+   pages (left/right/bottom). The transparent separator-color override
+   only camouflages the border, it does not remove it. Kill it whole. */
 .browserContainer {
-  border-top: none !important;
+  border: none !important;
 }
 
 #nav-bar {
@@ -1268,6 +1271,77 @@ sidebar-main,
 browser[type="content"],
 #sidebar {
   border-radius: 0 !important;
+}
+
+/* Launcher icons (tools + extensions) — selection follows the FoxOne model:
+   no background block, accent colour instead. The buttons are moz-buttons
+   inside sidebar-main's SHADOW ROOT, unreachable by selector; everything
+   below works through inherited design tokens.
+
+   Backgrounds: Nova paints the selected tool via
+   --toolbarbutton-background-color-active (sidebar-main.css puts it on the
+   non-ghost button); the rest are moz-button's own surface tokens for
+   rest/hover/press/selected in both ghost and default type. All flat. */
+sidebar-main {
+  --toolbarbutton-background-color-active: transparent !important;
+  --button-background-color: transparent !important;
+  --button-background-color-hover: transparent !important;
+  --button-background-color-active: transparent !important;
+  --button-background-color-selected: transparent !important;
+  --button-background-color-ghost-hover: transparent !important;
+  --button-background-color-ghost-active: transparent !important;
+  --button-background-color-ghost-selected: transparent !important;
+
+  /* Icons are context-fill images filled from --toolbarbutton-icon-fill
+     (routed through --button-icon-fill inside the shadow root). currentColor
+     hands the fill over to the button's TEXT colour, which moz-button swaps
+     per state on its own — so the hover/press tokens below recolour the
+     icon to the accent, no background needed. */
+  --toolbarbutton-icon-fill: currentColor !important;
+  --button-text-color-hover: var(--uc-color-accent) !important;
+  --button-text-color-ghost-hover: var(--uc-color-accent) !important;
+  --button-text-color-active: var(--uc-color-accent) !important;
+  --button-text-color-ghost-active: var(--uc-color-accent) !important;
+
+  /* Rest + selected stay FoxOne text. Without these the selected (non-ghost,
+     aria-pressed) button keeps --button-text-color-selected, which is meant
+     as text ON a filled accent surface and resolves dark — on the now
+     transparent background the icon went dark too. */
+  --button-text-color: var(--uc-color-text) !important;
+  --button-text-color-ghost: var(--uc-color-text) !important;
+  --button-text-color-selected: var(--uc-color-text) !important;
+  --button-text-color-ghost-selected: var(--uc-color-text) !important;
+}
+
+
+/* Sidebar panel documents (history, synced tabs, bookmarks …) are separate
+   chrome pages under chrome://browser/content/sidebar/, same mechanic as the
+   genai block below. Their "Chronik/Tabs durchsuchen" boxes are
+   moz-input-search widgets in shadow roots; the background token inherits
+   through. #1f1f1f: FoxOne's compiled-in field dark (matches the in-content
+   standins), deliberately darker than base. */
+@-moz-document url-prefix(chrome://browser/content/sidebar/) {
+  /* Search boxes ("Chronik/Lesezeichen/Tabs durchsuchen"). The
+     --input-text-background-color token is redefined on :host INSIDE the
+     widget shadow roots, so an inherited :root override never arrives.
+     userChrome.css is a USER sheet and user sheets match inside shadow
+     trees — style the input directly. #1f1f1f: FoxOne's compiled-in field
+     dark (matches the in-content standins). */
+  input[type="search"] {
+    background-color: #1f1f1f !important;
+  }
+
+  /* Selected row (bookmarks, history, synced/open tabs) — native paints
+     --button-background-color-primary, which resolves to the OS accent
+     (cyan block). Selection follows the FoxOne model instead: no
+     background block, accent text. Rules pierce into the list shadow
+     trees for the same user-sheet reason as above; #fabd2f =
+     --uc-color-accent (tokens don't reach here either). */
+  sidebar-tab-row[selected],
+  sidebar-bookmark-row[selected] {
+    background-color: transparent !important;
+    color: #fabd2f !important;
+  }
 }
 
 
