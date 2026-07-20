@@ -1,6 +1,6 @@
 /*==============================================================================================*
 
-  FoxOne 3.4.1 – A minimalistic one-line Firefox theme
+  FoxOne 3.4.3 – A minimalistic one-line Firefox theme
   Based on Cascade (https://github.com/andreasgrafen/cascade)
   Floating Find Bar by LittleFox (https://github.com/biglavis/LittleFox)
   MIT License
@@ -581,11 +581,12 @@ sidebar-main,
 }
 
 /* Nova added #trust-icon (site-info/security icon) inside the new
-   #trust-icon-container, sitting next to a flex #trust-label. The icon box
-   is a symmetric 16x16 (no margin/padding), yet Nova renders it ~2px too
-   high relative to the other urlbar icons. Nudge it down to align. */
+   #trust-icon-container, sitting next to a flex #trust-label. The Nova betas
+   rendered it ~2px too high (FoxOne nudged +2px); the FF153 final/RC fixed the
+   native offset, so the icon now only cancels the container's +1px below,
+   which stays for #trust-label and the breakout math. */
 #trust-icon {
-  margin-top: 2px !important;
+  margin-top: -1px !important;
 }
 
 /* The whole #trust-icon-container still renders 1px too high under Nova at
@@ -598,19 +599,10 @@ sidebar-main,
   margin-top: 1px !important;
 }
 
-/* In the breakout state Nova pushes the trust icon up by ~2px more than at
-   rest (not the uniform 1px the container baseline assumes) plus ~1px toward
-   the inline-start, so neither the base 2px nudge nor the container's +1 reach
-   it (issue #31). breakout-extend is set for exactly as long as the shift lasts
-   (Ctrl+L / click until a second Esc collapses the field, the post-first-Esc
-   residue included), so scoping the corrections to it fixes the focus state
-   without touching the resting position. margin-top 4px stacks on the
-   container's +1 for 5px effective; higher specificity (2 ids + attr) beats the
-   base nudge, and at rest the selector doesn't match. */
-#urlbar[breakout-extend] #trust-icon {
-  margin-top: 4px !important;
-  margin-inline-start: 1px !important;
-}
+/* No breakout-state correction anymore: the Nova betas shifted the trust icon
+   up + inline-start on [breakout-extend] (issue #31, fixed here with a scoped
+   4px/1px counter-nudge), but the FF153 final renders rest and breakout
+   identically, so the base rules above cover both states. */
 
 /* The EME / DRM-content indicator (#eme-notification-icon, in
    #notification-popup-box) pops up next to the shield during DRM playback and
@@ -619,6 +611,12 @@ sidebar-main,
    (geo, camera, mic) likely share this if they ever surface. */
 #eme-notification-icon {
   margin-top: 2px !important;
+}
+
+/* The unified-extensions (puzzle) button sits 1px too high in the nav-bar
+   since the FF153 final. Same family as the trust-icon corrections above. */
+#unified-extensions-button {
+  margin-top: 1px !important;
 }
 
 #TabsToolbar { order: 2; }
@@ -1588,9 +1586,10 @@ sidebar-main {
      12px, which FF153 rendered low (152 tolerated it). Drop only the block
      padding so the icon centres via .urlbar-icon { margin: auto } in the full
      24px height like the star; keep the inline padding for horizontal spacing,
-     else the icon sits cramped. */
+     else the icon sits cramped. 7px is calibrated for FF153+ (also the 153 ESR
+     base); pre-153 rendering (152 / ESR 140) wants 6px and gets 1px too wide. */
   padding-block: 0 !important;
-  padding-inline: 6px !important;
+  padding-inline: 7px !important;
   margin: 0 !important;
 }
 
