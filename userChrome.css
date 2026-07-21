@@ -1,6 +1,6 @@
 /*==============================================================================================*
 
-  FoxOne 3.4.3 – A minimalistic one-line Firefox theme
+  FoxOne 3.4.4 – A minimalistic one-line Firefox theme
   Based on Cascade (https://github.com/andreasgrafen/cascade)
   Floating Find Bar by LittleFox (https://github.com/biglavis/LittleFox)
   MIT License
@@ -1579,18 +1579,36 @@ sidebar-main {
 #urlbar[focused="true"] #taskbar-tabs-button,
 #urlbar[focused="true"] #translations-button,
 #urlbar[focused="true"] .urlbar-addon-page-action {
-  max-width: 30px !important;
+  /* max-width only drives the slide-in transition; it must never act as the
+     real width cap. An exact icon+padding fit (30px, then 32px) clipped the
+     translations icon on FF153 stable because the rendered icon runs wider
+     than its nominal 16px. Actual width = icon + padding-inline; the generous
+     cap just has to stay above that. */
+  max-width: 40px !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   /* The vertical padding was the bug: padding-block squeezed the content to
      12px, which FF153 rendered low (152 tolerated it). Drop only the block
      padding so the icon centres via .urlbar-icon { margin: auto } in the full
      24px height like the star; keep the inline padding for horizontal spacing,
-     else the icon sits cramped. 7px is calibrated for FF153+ (also the 153 ESR
-     base); pre-153 rendering (152 / ESR 140) wants 6px and gets 1px too wide. */
+     else the icon sits cramped. 8px calibrated on FF153 stable. */
   padding-block: 0 !important;
-  padding-inline: 7px !important;
+  padding-inline: 8px !important;
   margin: 0 !important;
+}
+
+/* Translations icon, FF153: Mozilla's translations.svg is 17px wide in a
+   16px .urlbar-icon box; upstream ships it with a "right letter is 1px too
+   long" comment and a margin-right: -1px band-aid. At fractional display
+   scaling the overhanging column gets clipped (right edge of the "A").
+   Replace the asset with the identical artwork wrapped in a proper
+   viewBox="0 0 17 16" so it scales into the box instead of overflowing it;
+   context-fill keeps the FoxOne recolouring intact. */
+#translations-button-icon {
+  list-style-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2017%2016'%20fill='context-fill%20light-dark(black,%20white)'%20fill-opacity='context-fill-opacity'%3E%3Cpath%20fill-rule='nonzero'%20d='M15.37%2015H17l-3.63-8.54a.75.75%200%200%200-.69-.46h-.82c-.3%200-.58.18-.7.46L9.32%2010.8l-.01-.01a10.8%2010.8%200%200%201-3.27-2.2%2012.38%2012.38%200%200%200%202.54-4.18L9.08%203H10V1.5H5.75V0h-1.5v1.5H0V3h7.5l-.33.91c-.47%201.31-1.2%202.52-2.13%203.56-.7-.9-1.25-1.9-1.63-2.97H1.8l.18.48a12.43%2012.43%200%200%200%201.97%203.56c-.9.75-1.89%201.35-2.96%201.78v1.58a12.3%2012.3%200%200%200%203.96-2.26%2012.31%2012.31%200%200%200%203.77%202.54L7.53%2015h1.64l1.06-2.5h4.08l1.06%202.5Zm-4.5-4%201.4-3.3%201.4%203.3h-2.8Z'/%3E%3C/svg%3E") !important;
+  /* Upstream compensates its 17px art with margin-right: -1px; our art fits
+     the box, so the compensation would just shave the spacing. */
+  margin-right: 0 !important;
 }
 
 /* Opt-in: fully hide URL-bar clutter icons, no hover/focus reveal.
